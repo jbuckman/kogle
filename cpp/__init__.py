@@ -1,1 +1,1 @@
-from buckmania.env.kogle.cpp.binding import *
+from cpp.binding import *

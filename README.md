@@ -7,12 +7,12 @@ apt-get install clang llvm
 ```
 Build instructions:
 ```
-chmod -x i
+chmod u+x i
 ./i
 ```
 To use:
 ```
-from kogle import Kogle
+from kogle.kogle import Kogle
 env = Kogle(game_name="Breakout", sticky_action_prob=0.1)
 ```
 The interface is pretty self-explanatory.
@@ -23,4 +23,5 @@ The interface is pretty self-explanatory.
 - `env.legal_action_mask` gets a boolean mask of length `env.action_count` indicating which actions are legal in this state.
 - `env.legal_action_set` gets an integer list of varying length corresponding to the legal actions.
 - `env.terminated` gets a boolean corresponding to whether the environment has terminated.
- 
+
+Run `python benchmark_speed.py` to see it in action.

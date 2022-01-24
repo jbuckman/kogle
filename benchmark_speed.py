@@ -1,5 +1,5 @@
 import random, time
-from kogle import Kogle
+from kogle.kogle import Kogle
 
 def make_env():
     return Kogle(game_name="Breakout")

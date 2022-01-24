@@ -1,6 +1,6 @@
 import random
 import numpy as np
-import cpp
+import cpp as games
 
 class Kogle:
     game_name = None                # Override this to choose a game
@@ -20,7 +20,7 @@ class Kogle:
 
     def __init__(self, **overrides):
         for k, v in overrides.items(): setattr(self, k, v)
-        self.kogle = getattr(cpp, self.game_name)()
+        self.kogle = getattr(games, self.game_name)()
         self.reset()
 
     @property
