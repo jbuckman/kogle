@@ -2,7 +2,7 @@ import random
 import numpy as np
 import cpp as games
 
-ACTIONS = NOOP, FIRE, UP, DOWN, LEFT, RIGHT, UPFIRE, DOWNFIRE, LEFTFIRE, RIGHTFIRE = list(range(9))
+ACTIONS = NOOP, FIRE, UP, DOWN, LEFT, RIGHT, UPFIRE, DOWNFIRE, LEFTFIRE, RIGHTFIRE = list(range(10))
 
 class Kogle:
     game_name = None                # Override this to choose a game
