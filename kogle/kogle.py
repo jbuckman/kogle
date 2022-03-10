@@ -11,7 +11,7 @@ class Kogle:
     frame_stack = 4                 # The dimensions of a single state
     state_tokens = 256              # Number of unique input values
     state_continuous = True         # Whether or not the input should be interpreted as continuous
-    action_count = 10               # Maximum number of actions in any state
+    action_count = len(ACTIONS)     # Maximum number of actions in any state
 
     discount = 1.                   # Discount to use for measuring the return
     random_termination_prob = 0.    # Chance of random mid-episode termination
@@ -23,7 +23,11 @@ class Kogle:
     def __init__(self, **overrides):
         for k, v in overrides.items(): setattr(self, k, v)
         self.kogle = getattr(games, self.game_name)()
-        self.reset()
+        self.steps = 0
+        self.terminated = False
+        self.stuck_action = None
+        self.recent_obs_buffer = np.zeros(self.state_shape, dtype=np.uint8)
+        self.kogle.renderPixels(self.recent_obs_buffer[-1])
 
     @property
     def observation(self):
@@ -43,17 +47,13 @@ class Kogle:
 
     @property
     def legal_action_set(self):
-        return [item for item in range(self.action_count) if item in self.legal_action_mask]
+        return {item for item in ACTIONS if item in self.legal_action_mask}
 
-    def reset(self):
-        self.kogle.reset()
-        self.steps = 0
-        self.terminated = False
-        self.stuck_action = None
-        self.recent_obs_buffer = np.zeros(self.state_shape, dtype=np.uint8)
-        self.kogle.renderPixels(self.recent_obs_buffer[-1])
+    def is_legal_action(self, action):
+        return self.legal_action_mask[action]
 
     def step(self, action):
+        assert self.is_legal_action(action)
         reward = 0
         for i in range(self.action_repeat):
             if self.stuck_action is None or random.random() > self.sticky_action_prob: self.stuck_action = action

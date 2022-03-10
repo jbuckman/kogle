@@ -87,11 +87,11 @@ inline bool collide(const Rect& a, const Rect& b) {
 class Breakout : public Game {
 public:
   Breakout() {
-    reset();
+    resetBallAndPaddle();
   }
   std::vector<bool> legalActions() override {
-    //      Up     Down   Left  Right Fire
-    return {false, false, true, true, false};
+    //      NOOP, FIRE,   UP,   DOWN,   LEFT, RIGHT, UPFIRE, DOWNFIRE, LEFTFIRE, RIGHTFIRE
+    return {true, false, false, false,  true, true,   false,   false,   false,    false};
   }
   void renderPixels(uint8_t * buffer) override {
     memset(buffer, 0, sizeof(uint8_t) * 64 * 64);
@@ -165,11 +165,11 @@ public:
     drawNumber(1, 1, score);
   }
   std::vector<int> step(uint8_t action) override {
-    bool Up = (action == 2) || (action == 2 + 4);
-    bool Down = (action == 3) || (action == 3 + 4);
-    bool Left = (action == 4) || (action == 4 + 4);
-    bool Right = (action == 5) || (action == 5 + 4);
-    bool Fire = (action == 0) || (action > 5);
+    bool Up = (action == 2) | (action == 2 + 4);
+    bool Down = (action == 3) | (action == 3 + 4);
+    bool Left = (action == 4) | (action == 4 + 4);
+    bool Right = (action == 5) | (action == 5 + 4);
+    bool Fire = (action == 0) | (action > 5);
     float lastScore = this->score;
     ball.x += ball.vx;
     ball.y += ball.vy;
@@ -224,10 +224,11 @@ public:
     const bool isDone = ball.y > 1;
     const int score = this->score - lastScore;
     if (isDone)
-      reset();
+      resetBallAndPaddle();
     return {score, isDone};
   }
-  void reset() override {
+private:
+  void resetBallAndPaddle() {
     ball.x = 0.5;
     ball.y = (rowStart + rowHeight * sizeof(rows) / sizeof(rows[0])) * 0.8 + 0.2;
     ball.vx = rand() % 2 == 0 ? slowSpeed / 2.0 : -slowSpeed / 2.0;
@@ -236,7 +237,6 @@ public:
     score = 0;
     speed = slowSpeed;
   }
-private:
   void doVolley() {
     volley++;
     if (volley % 4 == 0 && speed < slowSpeed * 2.5) {

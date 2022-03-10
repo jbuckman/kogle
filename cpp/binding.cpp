@@ -6,7 +6,6 @@ namespace py = pybind11;
 PYBIND11_MODULE(binding, m) {
   py::class_<Breakout>(m, "Breakout")
     .def(py::init<>())
-    .def("reset", &Breakout::reset)
     .def("legalActions", &Breakout::legalActions)
     .def("renderPixels", [](Breakout& breakout, py::buffer b) -> void {
       py::buffer_info info = b.request();
