@@ -8,7 +8,7 @@ class Kogle:
     game_name = None                # Override this to choose a game
 
     observation_shape = (64,64)     # The dimensions of a single observation
-    frame_stack = 4                 # The dimensions of a single state
+    obs_stack = 4                   # The number of observations to stack into a state
     state_tokens = 256              # Number of unique input values
     state_continuous = True         # Whether or not the input should be interpreted as continuous
     action_count = len(ACTIONS)     # Maximum number of actions in any state
@@ -39,7 +39,7 @@ class Kogle:
 
     @property
     def state_shape(self):
-        return (self.frame_stack,) + self.observation_shape
+        return (self.obs_stack,) + self.observation_shape
 
     @property
     def legal_action_mask(self):
