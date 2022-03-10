@@ -164,12 +164,12 @@ public:
     }
     drawNumber(1, 1, score);
   }
-  std::vector<int> step(std::vector<bool> action) override {
-    bool Up = action[0];
-    bool Down = action[1];
-    bool Left = action[2];
-    bool Right = action[3];
-    bool Fire = action[4];
+  std::vector<int> step(uint8_t action) override {
+    bool Up = (action == 1) || (action == 1 + 4);
+    bool Down = (action == 2) || (action == 2 + 4);
+    bool Left = (action == 3) || (action == 3 + 4);
+    bool Right = (action == 4) || (action == 4 + 4);
+    bool Fire = (action == 0) || (action > 4);
     float lastScore = this->score;
     ball.x += ball.vx;
     ball.y += ball.vy;
