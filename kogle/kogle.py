@@ -2,7 +2,7 @@ import random
 import numpy as np
 import cpp as games
 
-ACTIONS = FIRE, UP, DOWN, LEFT, RIGHT, UPFIRE, DOWNFIRE, LEFTFIRE, RIGHTFIRE = list(range(9))
+ACTIONS = NOOP, FIRE, UP, DOWN, LEFT, RIGHT, UPFIRE, DOWNFIRE, LEFTFIRE, RIGHTFIRE = list(range(9))
 
 class Kogle:
     game_name = None                # Override this to choose a game
@@ -11,7 +11,7 @@ class Kogle:
     frame_stack = 4                 # The dimensions of a single state
     state_tokens = 256              # Number of unique input values
     state_continuous = True         # Whether or not the input should be interpreted as continuous
-    action_count = 9                # Maximum number of actions in any state
+    action_count = 10               # Maximum number of actions in any state
 
     discount = 1.                   # Discount to use for measuring the return
     random_termination_prob = 0.    # Chance of random mid-episode termination
