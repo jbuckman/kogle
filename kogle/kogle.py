@@ -47,7 +47,7 @@ class Kogle:
 
     @property
     def legal_action_set(self):
-        return {item for item in ACTIONS if item in self.legal_action_mask}
+        return {action for action in ACTIONS if self.is_legal_action(action)}
 
     def is_legal_action(self, action):
         return self.legal_action_mask[action]
