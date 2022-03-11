@@ -11,7 +11,7 @@ while frames < 10000:
     if env is None or env.terminated:
         env = make_env()
     else:
-        env.step(random.choice(list(env.legal_action_set)))
+        env.step(random.choice(env.legal_action_list))
     frames += 1
 tt = time.time() - _t
 print(f"Time {tt}, Frames {frames}, FPS {frames / tt}")
