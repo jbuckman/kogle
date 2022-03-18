@@ -2,6 +2,7 @@
 #include <vector>
 #include "constants.h"
 
+
 class Game {
 public:
 
@@ -15,6 +16,17 @@ protected:
     if (x < 0 || x >= 64 || y < 0 || y >= 64) return;
     int i = floor(y) * 64 + floor(x);
     buffer[i] = v;
+  };
+  
+  template <size_t size_x, size_t size_y>
+  void drawBitmap(uint8_t * buffer,  bool (&bitmap)[size_x][size_y], float x, float y, uint8_t v) {
+    for (int r=0; r<size_x; r++) { 
+      for (int c = 0; c <size_y; c++) { 
+        if(bitmap[r][c]) {
+          drawPixel(buffer, x*64.0 + c-size_x/2.0, y*64.0+r, v);
+        }
+      }
+    }
   };
 
   void drawRect(uint8_t * buffer, float x, float y, float w, float h, uint8_t v) {

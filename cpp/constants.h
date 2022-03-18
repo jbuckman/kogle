@@ -72,4 +72,9 @@ struct Rect {
   float height;
 };
 
+struct Point {
+  float x;
+  float y;
+};
+
 #endif

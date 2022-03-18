@@ -16,6 +16,7 @@ panel = tk.Label(root, image=img)
 panel.pack(side="bottom", fill="both", expand="yes")
 
 def act(action):
+    print(action)
     global score
     global env
     reward = env.step(action)
