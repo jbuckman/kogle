@@ -2,16 +2,6 @@
 #include "game.h"
 #include <math.h>
 
-constexpr float slowSpeed = 0.35 / 64.0;
-constexpr float paddleSpeed = 0.5 / 64.0;
-constexpr float paddleSize = 10.0 / 64.0;
-constexpr float ballSize = 2.0 / 64.0;
-
-constexpr float rowHeight = 2.0 / 64.0;
-constexpr float rowStart = 20.0 / 64.0;
-
-constexpr int scores[] = {7, 7, 4, 4, 1, 1};
-
 class Breakout : public Game {
 public:
   Breakout() {
@@ -113,6 +103,77 @@ public:
     return {score, isDone};
   }
 private:
+
+  static constexpr float slowSpeed = 0.35 / 64.0;
+  static constexpr float paddleSpeed = 0.5 / 64.0;
+  static constexpr float paddleSize = 10.0 / 64.0;
+  static constexpr float ballSize = 2.0 / 64.0;
+  static constexpr float rowHeight = 2.0 / 64.0;
+  static constexpr float rowStart = 20.0 / 64.0;
+  static constexpr int scores[] = {7, 7, 4, 4, 1, 1};
+
+  static constexpr int boringColors[] = {75, 100, 150, 200, 225, 250};
+  const bool numberPatterns[10][5][3] = {{
+    {1, 1, 1},
+    {1, 0, 1},
+    {1, 0, 1},
+    {1, 0, 1},
+    {1, 1, 1},
+  }, {
+    {0, 1, 0},
+    {1, 1, 0},
+    {0, 1, 0},
+    {0, 1, 0},
+    {0, 1, 0},
+  }, {
+    {1, 1, 1},
+    {0, 0, 1},
+    {1, 1, 1},
+    {1, 0, 0},
+    {1, 1, 1},
+  }, {
+    {1, 1, 1},
+    {0, 0, 1},
+    {1, 1, 1},
+    {0, 0, 1},
+    {1, 1, 1},
+  }, {
+    {1, 0, 1},
+    {1, 0, 1},
+    {1, 1, 1},
+    {0, 0, 1},
+    {0, 0, 1},
+  }, {
+    {1, 1, 1},
+    {1, 0, 0},
+    {1, 1, 1},
+    {0, 0, 1},
+    {1, 1, 1},
+  }, {
+    {1, 1, 1},
+    {1, 0, 0},
+    {1, 1, 1},
+    {1, 0, 1},
+    {1, 1, 1},
+  }, {
+    {1, 1, 1},
+    {0, 0, 1},
+    {0, 0, 1},
+    {0, 1, 0},
+    {0, 1, 0},
+  }, {
+    {1, 1, 1},
+    {1, 0, 1},
+    {1, 1, 1},
+    {1, 0, 1},
+    {1, 1, 1},
+  }, {
+    {1, 1, 1},
+    {1, 0, 1},
+    {1, 1, 1},
+    {0, 0, 1},
+    {1, 1, 1},
+  }};
   void resetBallAndPaddle() {
     ball.x = 0.5;
     ball.y = (rowStart + rowHeight * sizeof(rows) / sizeof(rows[0])) * 0.8 + 0.2;
@@ -175,4 +236,23 @@ private:
   float speed = 0.005;
   int volley = 0;
   int score = 0;
+
+  void drawNumber(uint8_t * buffer, float x, float y, int number) {
+
+    int reverse = 0;
+    while (number != 0) {
+      reverse = reverse * 10 + number % 10;
+      number /= 10;
+    }
+    number = reverse;
+
+    while (true) {
+      int digit = number % 10;
+      number /= 10;
+      drawPattern(buffer, x, y, 255, numberPatterns[digit]);
+      x += 4;
+      if (number == 0) break;
+    }
+
+  };
 };

@@ -1,11 +1,15 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-//#include "breakout.h"
+#include "breakout.h"
 #include "spaceinvaders.h"
+#include "seaquest.h"
+
 namespace py = pybind11;
 
-/*
 PYBIND11_MODULE(binding, m) {
+
+  
+
   py::class_<Breakout>(m, "Breakout")
     .def(py::init<>())
     .def("legalActions", &Breakout::legalActions)
@@ -14,10 +18,7 @@ PYBIND11_MODULE(binding, m) {
       breakout.renderPixels((uint8_t *)info.ptr);
     })
     .def("step", &Breakout::step);
-}
-*/
 
-PYBIND11_MODULE(binding, m) {
   py::class_<Spaceinvaders>(m, "Spaceinvaders")
     .def(py::init<>())
     .def("legalActions", &Spaceinvaders::legalActions)
@@ -26,4 +27,14 @@ PYBIND11_MODULE(binding, m) {
       spaceinvaders.renderPixels((uint8_t *)info.ptr);
     })
     .def("step", &Spaceinvaders::step);
+
+  py::class_<Seaquest>(m, "Seaquest")
+    .def(py::init<>())
+    .def("legalActions", &Seaquest::legalActions)
+    .def("renderPixels", [](Seaquest& seaquest, py::buffer b) -> void {
+      py::buffer_info info = b.request();
+      seaquest.renderPixels((uint8_t *)info.ptr);
+    })
+    .def("step", &Seaquest::step);
+
 }

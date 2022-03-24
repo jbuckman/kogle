@@ -1,29 +1,12 @@
 #pragma once
 #include "game.h"
 #include <math.h>
-#include <time.h>
-#include <random>
 #include <iostream>
 
-constexpr float slowSpeed = 0.35 / 64.0;
-constexpr float shipSpeed = 0.5 / 64.0;
-
-constexpr float rowHeight = 2.0 / 64.0;
-constexpr float rowStart = 20.0 / 64.0;
-
-constexpr float bulletHeight = 2.0 / 64.0;
-constexpr float bulletWidth = 1.0 / 64.0;
-
-const float SHIELD_BLOCK_DIM = 3.0 / 64.0;
-
-const int ENEMY_ROWS = 4;
-const int ENEMIES_PER_ROW = 6;
-constexpr int TOTAL_ENEMIES = ENEMY_ROWS * ENEMIES_PER_ROW;
 
 class Spaceinvaders : public Game {
 public:
-  Spaceinvaders() {
-    srand (time(NULL));
+  Spaceinvaders() : Game() {
     reset();
   }
   std::vector<bool> legalActions() override {
@@ -102,7 +85,7 @@ public:
       }
     }
 
-    if(enemyBulletsActive < maxEnemyBullets && enemyFire(enemyFireProbability)) {
+    if(enemyBulletsActive < maxEnemyBullets && bernoulli(enemyFireProbability)) {
       
       for(int r=0; r <ENEMY_ROWS; r++) {
         std::vector<int> aliveInRow;
@@ -162,8 +145,6 @@ public:
       bulletFired = true;
     } 
 
-    
-
     if (bulletFired) {
       bool hit = false;
       bullet.y -= playerBulletSpeed;
@@ -204,6 +185,22 @@ public:
   }
 
 private:
+
+  static constexpr float slowSpeed = 0.35 / 64.0;
+  static constexpr float shipSpeed = 0.5 / 64.0;
+
+  static constexpr float rowHeight = 2.0 / 64.0;
+  static constexpr float rowStart = 20.0 / 64.0;
+
+  static constexpr float bulletHeight = 2.0 / 64.0;
+  static constexpr float bulletWidth = 1.0 / 64.0;
+
+  static constexpr float SHIELD_BLOCK_DIM = 3.0 / 64.0;
+
+  static constexpr int ENEMY_ROWS = 4;
+  static constexpr int ENEMIES_PER_ROW = 6;
+  
+  static constexpr int TOTAL_ENEMIES = ENEMY_ROWS * ENEMIES_PER_ROW;
 
   bool shipPatternRows[3][7] = {
     {0, 0, 1, 1, 1, 0, 0},
@@ -293,17 +290,9 @@ private:
   Point enemies[ENEMY_ROWS][ENEMIES_PER_ROW];
 
   double enemyFireProbability = 0.01;
-
-  bool enemyFire(double probability) {
-    std::random_device randomDevice{}; 
-    std::mt19937 generator{randomDevice()}; 
-    std::bernoulli_distribution distribution(probability);
-    return distribution(generator);
-  }
   
   int level = 0;
   
-
 protected:
 
   void reset() {
