@@ -1,89 +1,7 @@
 #pragma once
 #include "game.h"
 #include <math.h>
-constexpr float slowSpeed = 0.35 / 64.0;
-constexpr float paddleSpeed = 0.5 / 64.0;
-constexpr float paddleSize = 10.0 / 64.0;
-constexpr float ballSize = 2.0 / 64.0;
 
-constexpr float rowHeight = 2.0 / 64.0;
-constexpr float rowStart = 20.0 / 64.0;
-
-constexpr int scores[] = {7, 7, 4, 4, 1, 1};
-constexpr int boringColors[] = {75, 100, 150, 200, 225, 250};
-const bool numberPatterns[10][5][3] = {{
-  {1, 1, 1},
-  {1, 0, 1},
-  {1, 0, 1},
-  {1, 0, 1},
-  {1, 1, 1},
-}, {
-  {0, 1, 0},
-  {1, 1, 0},
-  {0, 1, 0},
-  {0, 1, 0},
-  {0, 1, 0},
-}, {
-  {1, 1, 1},
-  {0, 0, 1},
-  {1, 1, 1},
-  {1, 0, 0},
-  {1, 1, 1},
-}, {
-  {1, 1, 1},
-  {0, 0, 1},
-  {1, 1, 1},
-  {0, 0, 1},
-  {1, 1, 1},
-}, {
-  {1, 0, 1},
-  {1, 0, 1},
-  {1, 1, 1},
-  {0, 0, 1},
-  {0, 0, 1},
-}, {
-  {1, 1, 1},
-  {1, 0, 0},
-  {1, 1, 1},
-  {0, 0, 1},
-  {1, 1, 1},
-}, {
-  {1, 1, 1},
-  {1, 0, 0},
-  {1, 1, 1},
-  {1, 0, 1},
-  {1, 1, 1},
-}, {
-  {1, 1, 1},
-  {0, 0, 1},
-  {0, 0, 1},
-  {0, 1, 0},
-  {0, 1, 0},
-}, {
-  {1, 1, 1},
-  {1, 0, 1},
-  {1, 1, 1},
-  {1, 0, 1},
-  {1, 1, 1},
-}, {
-  {1, 1, 1},
-  {1, 0, 1},
-  {1, 1, 1},
-  {0, 0, 1},
-  {1, 1, 1},
-}};
-struct Rect {
-  float x;
-  float y;
-  float width;
-  float height;
-};
-inline bool collide(const Rect& a, const Rect& b) {
-  return a.x + a.width / 2.0 > b.x - b.width / 2.0 &&
-         a.x - a.width / 2.0 < b.x + b.width / 2.0 &&
-         a.y + a.height / 2.0 > b.y - b.height / 2.0 &&
-         a.y - a.height / 2.0 < b.y + b.height / 2.0;
-}
 class Breakout : public Game {
 public:
   Breakout() {
@@ -95,54 +13,11 @@ public:
   }
   void renderPixels(uint8_t * buffer) override {
     memset(buffer, 0, sizeof(uint8_t) * 64 * 64);
-    auto drawPixel = [&](float x, float y, uint8_t v) {
-      if (x < 0 || x >= 64 || y < 0 || y >= 64) return;
-      int i = floor(y) * 64 + floor(x);
-      buffer[i] = v;
-    };
-    auto drawRect = [&](float x, float y, float w, float h, uint8_t v) {
-      for (float i = x; i < x + w; i++) {
-        for (float j = y; j < y + h; j++)
-          drawPixel(i, j, v);
-      }
-    };
-    auto drawRectDangerously = [&](float x, float y, float w, float h, uint8_t v) {
-      for (float j = y; j < y + h; j++) {
-        for (float i = x; i < x + w; i++) {
-          int index = floor(j) * 64 + floor(i);
-          buffer[index] = v;
-        }
-      }
-    };
-    auto drawPattern = [&](float x, float y, uint8_t v, const bool pattern[5][3]) {
-      for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 3; j++) {
-          if (pattern[i][j]) {
-            buffer[i * 64 + j] = v;
-          }
-        }
-      }
-    };
-    auto drawNumber = [&](float x, float y, int number) {
-      {
-        int reverse = 0;
-        while (number != 0) {
-          reverse = reverse * 10 + number % 10;
-          number /= 10;
-        }
-        number = reverse;
-      }
-      while (true) {
-        int digit = number % 10;
-        number /= 10;
-        drawPattern(x, y, 255, numberPatterns[digit]);
-        x += 4;
-        if (number == 0) break;
-      }
-    };
-    drawRect(64.0 * paddle.x - paddleSize * 64.0 / 2.0, 64.0 * paddle.y - ballSize * 64.0 / 2.0, paddleSize * 64.0, ballSize * 64.0, 255);
-    drawRect(64.0 * ball.x - ballSize * 64.0 / 2.0, 64.0 * ball.y - ballSize * 64.0 / 2.0, ballSize * 64.0, ballSize * 64.0, 255);
-    drawPixel(ball.x * 64.0, ball.y * 64.0, 255);
+
+    drawRect(buffer, 64.0 * paddle.x - paddleSize * 64.0 / 2.0, 64.0 * paddle.y - ballSize * 64.0 / 2.0, paddleSize * 64.0, ballSize * 64.0, 255);
+    drawRect(buffer, 64.0 * ball.x - ballSize * 64.0 / 2.0, 64.0 * ball.y - ballSize * 64.0 / 2.0, ballSize * 64.0, ballSize * 64.0, 255);
+    drawPixel(buffer, ball.x * 64.0, ball.y * 64.0, 255);
+
     float y = rowStart;
     int colorIndex = 0;
     for (const auto& row : rows) {
@@ -158,11 +33,11 @@ public:
       memset(&buffer[start], color, end - start);
       for (int x = 0; x < rowSize; x++) {
         if (!row[x])
-          drawRectDangerously(64.0 * x / rowSize, 64.0 * y, 64.0 / rowSize, 64.0 * rowHeight, 0);
+          drawRectDangerously(buffer, 64.0 * x / rowSize, 64.0 * y, 64.0 / rowSize, 64.0 * rowHeight, 0);
       }
       y += rowHeight;
     }
-    drawNumber(1, 1, score);
+    drawNumber(buffer, 1, 1, score);
   }
   std::vector<int> step(uint8_t action) override {
     bool Up = (action == 2) | (action == 2 + 4);
@@ -228,6 +103,77 @@ public:
     return {score, isDone};
   }
 private:
+
+  static constexpr float slowSpeed = 0.35 / 64.0;
+  static constexpr float paddleSpeed = 0.5 / 64.0;
+  static constexpr float paddleSize = 10.0 / 64.0;
+  static constexpr float ballSize = 2.0 / 64.0;
+  static constexpr float rowHeight = 2.0 / 64.0;
+  static constexpr float rowStart = 20.0 / 64.0;
+  static constexpr int scores[] = {7, 7, 4, 4, 1, 1};
+
+  static constexpr int boringColors[] = {75, 100, 150, 200, 225, 250};
+  const bool numberPatterns[10][5][3] = {{
+    {1, 1, 1},
+    {1, 0, 1},
+    {1, 0, 1},
+    {1, 0, 1},
+    {1, 1, 1},
+  }, {
+    {0, 1, 0},
+    {1, 1, 0},
+    {0, 1, 0},
+    {0, 1, 0},
+    {0, 1, 0},
+  }, {
+    {1, 1, 1},
+    {0, 0, 1},
+    {1, 1, 1},
+    {1, 0, 0},
+    {1, 1, 1},
+  }, {
+    {1, 1, 1},
+    {0, 0, 1},
+    {1, 1, 1},
+    {0, 0, 1},
+    {1, 1, 1},
+  }, {
+    {1, 0, 1},
+    {1, 0, 1},
+    {1, 1, 1},
+    {0, 0, 1},
+    {0, 0, 1},
+  }, {
+    {1, 1, 1},
+    {1, 0, 0},
+    {1, 1, 1},
+    {0, 0, 1},
+    {1, 1, 1},
+  }, {
+    {1, 1, 1},
+    {1, 0, 0},
+    {1, 1, 1},
+    {1, 0, 1},
+    {1, 1, 1},
+  }, {
+    {1, 1, 1},
+    {0, 0, 1},
+    {0, 0, 1},
+    {0, 1, 0},
+    {0, 1, 0},
+  }, {
+    {1, 1, 1},
+    {1, 0, 1},
+    {1, 1, 1},
+    {1, 0, 1},
+    {1, 1, 1},
+  }, {
+    {1, 1, 1},
+    {1, 0, 1},
+    {1, 1, 1},
+    {0, 0, 1},
+    {1, 1, 1},
+  }};
   void resetBallAndPaddle() {
     ball.x = 0.5;
     ball.y = (rowStart + rowHeight * sizeof(rows) / sizeof(rows[0])) * 0.8 + 0.2;
@@ -290,4 +236,23 @@ private:
   float speed = 0.005;
   int volley = 0;
   int score = 0;
+
+  void drawNumber(uint8_t * buffer, float x, float y, int number) {
+
+    int reverse = 0;
+    while (number != 0) {
+      reverse = reverse * 10 + number % 10;
+      number /= 10;
+    }
+    number = reverse;
+
+    while (true) {
+      int digit = number % 10;
+      number /= 10;
+      drawPattern(buffer, x, y, 255, numberPatterns[digit]);
+      x += 4;
+      if (number == 0) break;
+    }
+
+  };
 };
