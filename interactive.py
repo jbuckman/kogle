@@ -7,7 +7,7 @@ def _photo_image(image: np.ndarray):
     data = f'P5 {width} {height} 255 '.encode() + image.astype(np.uint8).tobytes()
     return tk.PhotoImage(width=width, height=height, data=data, format='PPM')
 
-env = Kogle(game_name="Seaquest")
+env = Kogle(game_name="SpaceInvaders")
 score = 0
 root = tk.Tk()
 
