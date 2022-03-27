@@ -19,7 +19,7 @@ PYBIND11_MODULE(binding, m) {
     })
     .def("step", &Breakout::step);
 
-  py::class_<Spaceinvaders>(m, "Spaceinvaders")
+  py::class_<Spaceinvaders>(m, "SpaceInvaders")
     .def(py::init<>())
     .def("legalActions", &Spaceinvaders::legalActions)
     .def("renderPixels", [](Spaceinvaders& spaceinvaders, py::buffer b) -> void {
