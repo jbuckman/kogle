@@ -8,8 +8,6 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(binding, m) {
 
-  
-
   py::class_<Breakout>(m, "Breakout")
     .def(py::init<>())
     .def("legalActions", &Breakout::legalActions)
@@ -19,14 +17,15 @@ PYBIND11_MODULE(binding, m) {
     })
     .def("step", &Breakout::step);
 
-  py::class_<Spaceinvaders>(m, "SpaceInvaders")
+
+  py::class_<SpaceInvaders>(m, "SpaceInvaders")
     .def(py::init<>())
-    .def("legalActions", &Spaceinvaders::legalActions)
-    .def("renderPixels", [](Spaceinvaders& spaceinvaders, py::buffer b) -> void {
+    .def("legalActions", &SpaceInvaders::legalActions)
+    .def("renderPixels", [](SpaceInvaders& SpaceInvaders, py::buffer b) -> void {
       py::buffer_info info = b.request();
-      spaceinvaders.renderPixels((uint8_t *)info.ptr);
+      SpaceInvaders.renderPixels((uint8_t *)info.ptr);
     })
-    .def("step", &Spaceinvaders::step);
+    .def("step", &SpaceInvaders::step);
 
   py::class_<Seaquest>(m, "Seaquest")
     .def(py::init<>())

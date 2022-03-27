@@ -4,9 +4,9 @@
 #include <iostream>
 
 
-class Spaceinvaders : public Game {
+class SpaceInvaders : public Game {
 public:
-  Spaceinvaders() : Game() {
+  SpaceInvaders() : Game() {
     reset();
   }
   std::vector<bool> legalActions() override {
