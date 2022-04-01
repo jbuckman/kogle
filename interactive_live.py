@@ -10,7 +10,8 @@ def _photo_image(image: np.ndarray):
     data = f'P5 {width} {height} 255 '.encode() + image.astype(np.uint8).tobytes()
     return tk.PhotoImage(width=width, height=height, data=data, format='PPM')
 
-env = Kogle(game_name="Spaceinvaders")
+frame_rate = 60
+env = Kogle(game_name="Breakout", frame_rate = frame_rate)
 score = 0
 root = tk.Tk()
 
@@ -37,10 +38,10 @@ keys = {
     'down arrow': DOWN
 }
 
-async def game_loop(framerate_limit=30):
+async def game_loop(frame_rate):
     loop = asyncio.get_event_loop()
     next_frame_target = 0.0
-    limit_frame_duration = (1.0 / framerate_limit)
+    limit_frame_duration = (1.0 / frame_rate)
     while True:
         this_frame = time.time()
         delay = next_frame_target - this_frame
@@ -61,4 +62,4 @@ async def handle_update(action):
     act(action)
     root.update()
     
-asyncio.run(game_loop())
+asyncio.run(game_loop(frame_rate))

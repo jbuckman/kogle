@@ -15,7 +15,8 @@ PYBIND11_MODULE(binding, m) {
       py::buffer_info info = b.request();
       breakout.renderPixels((uint8_t *)info.ptr);
     })
-    .def("step", &Breakout::step);
+    .def("step", &Breakout::step)
+    .def("setDeltaT",  &Breakout::setDeltaT);
 
 
   py::class_<SpaceInvaders>(m, "SpaceInvaders")
@@ -25,7 +26,12 @@ PYBIND11_MODULE(binding, m) {
       py::buffer_info info = b.request();
       SpaceInvaders.renderPixels((uint8_t *)info.ptr);
     })
+<<<<<<< HEAD
     .def("step", &SpaceInvaders::step);
+=======
+    .def("step", &Spaceinvaders::step)
+    .def("setDeltaT", &Spaceinvaders::setDeltaT);
+>>>>>>> setDeltaT and dt was added game.h for frame rate independent movement. Pygame implementation of breakout was added
 
   py::class_<Seaquest>(m, "Seaquest")
     .def(py::init<>())
@@ -34,6 +40,6 @@ PYBIND11_MODULE(binding, m) {
       py::buffer_info info = b.request();
       seaquest.renderPixels((uint8_t *)info.ptr);
     })
-    .def("step", &Seaquest::step);
-
+    .def("step", &Seaquest::step)
+    .def("setDeltaT", &Seaquest::setDeltaT);
 }
