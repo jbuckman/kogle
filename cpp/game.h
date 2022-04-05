@@ -4,7 +4,12 @@
 #include <random>
 
 class Game {
+
 public:
+
+  void setDeltaT(float value) {
+    dt = value;
+  }
 
   virtual std::vector<bool> legalActions() = 0;
   virtual void renderPixels(uint8_t * buffer) = 0;
@@ -15,6 +20,8 @@ public:
   }
 
 protected:
+
+  float dt = 1.0f;
 
   struct Rect {
     float x;
