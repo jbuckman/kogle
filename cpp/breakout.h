@@ -46,8 +46,8 @@ public:
     bool Right = (action == 5) | (action == 5 + 4);
     bool Fire = (action == 0) | (action > 5);
     float lastScore = this->score;
-    ball.x += ball.vx*dt;
-    ball.y += ball.vy*dt;
+    ball.x += ball.vx;
+    ball.y += ball.vy;
 
     // // Auto Player
     // if (abs(paddle.x - ball.x) > paddleSpeed) {
@@ -104,8 +104,8 @@ public:
   }
 private:
 
-  static constexpr float slowSpeed = 2.0 / 64.0;
-  static constexpr float paddleSpeed = 0.35 / 64.0;
+  static constexpr float slowSpeed = 0.35 / 64.0;
+  static constexpr float paddleSpeed = 0.5 / 64.0;
   static constexpr float paddleSize = 10.0 / 64.0;
   static constexpr float ballSize = 2.0 / 64.0;
   static constexpr float rowHeight = 2.0 / 64.0;

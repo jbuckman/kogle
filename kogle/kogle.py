@@ -1,7 +1,6 @@
 import random
 import numpy as np
 
-
 ACTIONS = NOOP, FIRE, UP, DOWN, LEFT, RIGHT, UPFIRE, DOWNFIRE, LEFTFIRE, RIGHTFIRE = list(range(10))
 
 class Kogle:
@@ -22,21 +21,20 @@ class Kogle:
 
     def __init__(self, **overrides):
         for k, v in overrides.items(): setattr(self, k, v)
+
         if self.game_name[:2] == 'Py':
             import py as py_games
             self.kogle = getattr(py_games, self.game_name[2:])()
         else:
             import cpp as cpp_games
             self.kogle = getattr(cpp_games, self.game_name)()
+
         self.steps = 0
         self.terminated = False
         self.stuck_action = None
         self.recent_obs_buffer = np.zeros(self.state_shape, dtype=np.uint8)
         self.kogle.renderPixels(self.recent_obs_buffer[-1])
-
-        if 'frame_rate' in overrides:
-            self.kogle.setDeltaT(1.0/(overrides['frame_rate']))
-
+ 
     @property
     def legal_action_mask(self):
         return self.kogle.legalActions()
