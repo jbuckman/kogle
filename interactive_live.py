@@ -1,4 +1,4 @@
-import numpy as np
+import sys
 from kogle.kogle import *
 import pygame
 import time
@@ -19,7 +19,7 @@ def get_observation():
     new_observation = env.observation.repeat(8, 0).repeat(8, 1).T
     return np.repeat(new_observation[:, :, np.newaxis], 3, axis=2)
 
-env = Kogle(game_name="PyBreakout")
+env = Kogle(game_name=sys.argv[1])
 score = 0
 
 contine_looping = True
