@@ -2,3 +2,4 @@
 cpp/*.so
 __pycache__/*
 py/__pycache__/*
+kogle/__pycache__/*
