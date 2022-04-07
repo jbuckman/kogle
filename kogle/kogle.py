@@ -1,8 +1,8 @@
 import random
 import numpy as np
 
-ACTIONS = NOOP, UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT, \
-          FIRE, UPFIRE, DOWNFIRE, LEFTFIRE, RIGHTFIRE, UPLEFTFIRE, UPRIGHTFIRE, DOWNLEFTFIRE, DOWNRIGHTFIRE = list(range(18))
+ACTIONS = NOOP, UP,     DOWN,     LEFT,     RIGHT, \
+          FIRE, UPFIRE, DOWNFIRE, LEFTFIRE, RIGHTFIRE = list(range(10))
 
 class Kogle:
     game_name = None                # Override this to choose a game

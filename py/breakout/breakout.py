@@ -85,4 +85,4 @@ class Breakout(Game):
         return (score, False)
             
     def legalActions(self):
-        return [True, False, False, True, True, False, False, False, False, False, False, False, False, False, False, False, False, False]
+        return [True, False, False, True, True, False, False, False, False, False]
