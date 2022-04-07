@@ -9,8 +9,8 @@ public:
   Seaquest() : Game() {}
 
   std::vector<bool> legalActions() override {
-    //      NOOP, FIRE,   UP,   DOWN,   LEFT, RIGHT, UPFIRE, DOWNFIRE, LEFTFIRE, RIGHTFIRE
-    return {true, true, true, true,  true, true,   false,   false,   false,    false};
+    //      NOOP, UP,   DOWN,   LEFT, RIGHT, FIRE
+    return {true, true, true,   true, true,  true};
   }
 
   void renderPixels(uint8_t * buffer) override { 

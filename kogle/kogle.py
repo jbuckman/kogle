@@ -1,8 +1,7 @@
 import random
 import numpy as np
 
-ACTIONS = NOOP, UP,     DOWN,     LEFT,     RIGHT, \
-          FIRE, UPFIRE, DOWNFIRE, LEFTFIRE, RIGHTFIRE = list(range(10))
+ACTIONS = NOOP, UP, DOWN, LEFT, RIGHT, FIRE = list(range(6))
 
 class Kogle:
     game_name = None                # Override this to choose a game
@@ -34,6 +33,7 @@ class Kogle:
         self.terminated = False
         self.stuck_action = None
         self.legal_action_mask = self.kogle.legalActions()
+        assert len(self.legal_action_mask) == self.action_count
         self.legal_action_list = [action for action in ACTIONS if self.is_legal_action(action)]
         self.recent_obs_buffer = np.zeros(self.state_shape, dtype=np.uint8)
         self.kogle.renderPixels(self.recent_obs_buffer[-1])

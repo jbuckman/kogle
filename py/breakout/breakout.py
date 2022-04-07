@@ -3,7 +3,6 @@ from ..game_entity import GameEntity
 from .ball import Ball
 import numpy as np
 from ..colors import *
-from random import randint
 
 class Breakout(Game):
 
@@ -12,11 +11,7 @@ class Breakout(Game):
         self.paddle_speed = 1
         self.paddle = None
         self.ball = None
-        self.reset()
 
-
-    def reset(self):
-        
         self.paddle = GameEntity(10, 2, 20, 60, WHITE)
         self.ball   = Ball(2, 2, 20, 30, WHITE)
 
@@ -85,4 +80,5 @@ class Breakout(Game):
         return (score, False)
             
     def legalActions(self):
-        return [True, False, False, True, True, False, False, False, False, False]
+        ##      NOOP  UP     DOWN   LEFT  RIGHT  FIRE
+        return [True, False, False, True, True, False]
