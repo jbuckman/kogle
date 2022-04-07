@@ -33,16 +33,10 @@ class Kogle:
         self.steps = 0
         self.terminated = False
         self.stuck_action = None
+        self.legal_action_mask = self.kogle.legalActions()
+        self.legal_action_list = [action for action in ACTIONS if self.is_legal_action(action)]
         self.recent_obs_buffer = np.zeros(self.state_shape, dtype=np.uint8)
         self.kogle.renderPixels(self.recent_obs_buffer[-1])
- 
-    @property
-    def legal_action_mask(self):
-        return self.kogle.legalActions()
-
-    @property
-    def legal_action_list(self):
-        return [action for action in ACTIONS if self.is_legal_action(action)]
 
     @property
     def observation(self):
