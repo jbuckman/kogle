@@ -1,17 +1,23 @@
-import random, time
+import random, time, sys
 from kogle.kogle import Kogle
 
 def make_env():
-    return Kogle(game_name="Breakout")
+    return Kogle(game_name=sys.argv[0])
+
+## Take one step to initialize numba
+env = make_env()
+env.step(random.choice(env.legal_action_list))
 
 env = None
 _t = time.time()
+obs = []
 frames = 0
 while frames < 10000:
     if env is None or env.terminated:
         env = make_env()
-    else:
-        env.step(random.choice(env.legal_action_list))
+        obs = []
+    env.step(random.choice(env.legal_action_list))
+    obs.append(env.observation)
     frames += 1
 tt = time.time() - _t
 print(f"Time {tt}, Frames {frames}, FPS {frames / tt}")

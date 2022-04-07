@@ -1,13 +1,13 @@
 import tkinter as tk
-import numpy as np
 from kogle.kogle import *
+import sys
 
 def _photo_image(image: np.ndarray):
     height, width = image.shape
     data = f'P5 {width} {height} 255 '.encode() + image.astype(np.uint8).tobytes()
     return tk.PhotoImage(width=width, height=height, data=data, format='PPM')
 
-env = Kogle(game_name="Breakout")
+env = Kogle(game_name=sys.argv[0])
 score = 0
 root = tk.Tk()
 

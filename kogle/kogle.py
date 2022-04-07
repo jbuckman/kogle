@@ -1,7 +1,8 @@
 import random
 import numpy as np
 
-ACTIONS = NOOP, FIRE, UP, DOWN, LEFT, RIGHT, UPFIRE, DOWNFIRE, LEFTFIRE, RIGHTFIRE = list(range(10))
+ACTIONS = NOOP, UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT, \
+        = FIRE, UPFIRE, DOWNFIRE, LEFTFIRE, RIGHTFIRE, UPLEFTFIRE, UPRIGHTFIRE, DOWNLEFTFIRE, DOWNRIGHTFIRE = list(range(18))
 
 class Kogle:
     game_name = None                # Override this to choose a game
@@ -16,7 +17,7 @@ class Kogle:
     random_termination_prob = 0.    # Chance of random mid-episode termination
     max_steps = None                # Number of steps before forced termination
 
-    action_repeat = 4               # Number of times in a row to take an action
+    action_repeat = 1               # Number of times in a row to take an action
     sticky_action_prob = 1/4        # Chance that the environment repeats the last action instead of taking the new one
 
     def __init__(self, **overrides):

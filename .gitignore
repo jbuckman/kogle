@@ -1,2 +1,4 @@
 .idea/*
 cpp/*.so
+__pycache__/*
+py/__pycache__/*
