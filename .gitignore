@@ -1,5 +1,5 @@
 .idea/*
 cpp/*.so
 __pycache__/*
-py/__pycache__/*
-kogle/__pycache__/*
+*/__pycache__/*
+*/*/__pycache__/*
