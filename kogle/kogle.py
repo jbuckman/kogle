@@ -5,7 +5,6 @@ ACTIONS = NOOP, FIRE, UP, DOWN, LEFT, RIGHT = list(range(6))
 
 class Kogle:
     game_name = None                # Override this to choose a game
-    frame_rate = 1
     observation_shape = (64,64)     # The dimensions of a single observation
     obs_stack = 4                   # The number of observations to stack into a state
     state_tokens = 256              # Number of unique input values
