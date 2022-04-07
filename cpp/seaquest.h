@@ -9,7 +9,7 @@ public:
   Seaquest() : Game() {}
 
   std::vector<bool> legalActions() override {
-    //      NOOP, UP,   DOWN,   LEFT, RIGHT, FIRE
+    //      NOOP, FIRE, UP,   DOWN,   LEFT, RIGHT
     return {true, true, true,   true, true,  true};
   }
 

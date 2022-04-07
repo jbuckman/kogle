@@ -8,8 +8,8 @@ public:
     resetBallAndPaddle();
   }
   std::vector<bool> legalActions() override {
-    //      NOOP, UP,   DOWN,   LEFT, RIGHT,  FIRE
-    return {true, false, false, true, true,   false};
+    //      NOOP,  FIRE, UP,   DOWN,   LEFT, RIGHT
+    return {true,   false, false, false, true, true};
   }
   void renderPixels(uint8_t * buffer) override {
     memset(buffer, 0, sizeof(uint8_t) * 64 * 64);

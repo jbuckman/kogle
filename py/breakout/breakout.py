@@ -80,5 +80,5 @@ class Breakout(Game):
         return (score, False)
             
     def legalActions(self):
-        ##      NOOP  UP     DOWN   LEFT  RIGHT  FIRE
-        return [True, False, False, True, True, False]
+        ##      NOOP  FIRE UP     DOWN   LEFT  RIGHT
+        return [True, False, False, False, True, True]

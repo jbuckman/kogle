@@ -1,7 +1,7 @@
 import random
 import numpy as np
 
-ACTIONS = NOOP, UP, DOWN, LEFT, RIGHT, FIRE = list(range(6))
+ACTIONS = NOOP, FIRE, UP, DOWN, LEFT, RIGHT = list(range(6))
 
 class Kogle:
     game_name = None                # Override this to choose a game
