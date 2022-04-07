@@ -1,10 +1,10 @@
-from ..game_entity import GameEntity
+#from ..game_entity import GameEntity
 from random import randint
+from ..cgame_entity import CGameEntity
+class Ball(CGameEntity):
 
-class Ball(GameEntity):
-
-    def __init__(self, _width, _height, _x, _y, _color, _isAlive=True):
-        super().__init__(_width, _height, _x, _y, _color, _isAlive)
+    def __init__(self, _width, _height, _x, _y, _color):
+        super().__init__(_width, _height, _x, _y, _color)
         self._vx = 0.5
         self._vy = 0.5
 

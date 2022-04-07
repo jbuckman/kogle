@@ -10,6 +10,13 @@ Build instructions:
 chmod u+x i
 ./i
 ```
+Build instructions to run python/cython implementation of game:
+```
+cd py
+python setup.py build_ext --inplace
+cd ..
+python benchmark_speed.py PyBreakout
+```
 To use:
 ```
 from kogle.kogle import Kogle
@@ -24,5 +31,7 @@ The interface is pretty self-explanatory.
 - `env.terminated` gets a boolean corresponding to whether the environment has terminated.
 
 Run `python interactive.py` to get an interactive version of the game that can be played with arrow keys. (Requires `tkinter`.) Use spacebar to fire, z for no-op, and WASD to move and fire at the same time.
+
+Run `python interactive_live.py` to get an interactive version with timed frames. Default 30fps. (Requires `pygame`.) Uses same controls as `python interactive.py`.
 
 Run `python benchmark_speed.py` to measure the FPS.

@@ -1,9 +1,4 @@
 from itertools import count
-from numba import jit
-
-@jit(nopython=True)
-def _collide(x1, y1, width1, height1, x2, y2, width2, height2):
-    return  x1 < x2 + width2 and x1 + width1 > x2   and y1 < y2 + height2 and height1 + y1 > y2
 
 class GameEntity:
 

@@ -20,8 +20,12 @@ def get_observation():
     return np.repeat(new_observation[:, :, np.newaxis], 3, axis=2)
 
 env = Kogle(game_name=sys.argv[1])
-score = 0
 
+max_frame_rate = 30
+if len(sys.argv) > 2 and sys.argv[2].isdigit():
+    max_frame_rate = int(sys.argv[2])
+
+score = 0
 contine_looping = True
 action_keys = {}
 action_keys[pygame.K_LEFT] = LEFT
@@ -49,7 +53,7 @@ while contine_looping:
             next_action = NOOP
 
     act(next_action) 
-    clock.tick(10)
+    clock.tick(max_frame_rate)
 
     surface = pygame.surfarray.make_surface(get_observation())
     screen.blit(surface, (0,0))
