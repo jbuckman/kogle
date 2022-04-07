@@ -1,57 +1,93 @@
 from abc import ABC, abstractmethod
-from .colors import BLACK, RED 
 from .game_entity import GameEntity
 import numpy as np
-import pygame
-class Game(ABC):
+from math import ceil, floor
+from numba import jit
+
+@jit(nopython=True)
+def _fillwithzero(buffer):
+    buffer.fill(0)
+
+
+@jit(nopython=True)
+def _setBufferValue(buffer, x, y, width, height, color):
+    x = np.floor(x)
+    y = np.floor(y)
+    width = np.ceil(width)
+    height = np.ceil(height)
+    buffer[y:y+height, x:x+width].fill(color)
+
+@jit(nopython=True)
+def _renderPixels(buffer, x, y, width, height, color):
+    buffer.fill(0)
+    x = np.floor(x)
+    y = np.floor(y)
+    width = np.ceil(width)
+    height = np.ceil(height)
+    for i in range(len(x)):
+        buffer[y[i]:y[i]+height[i], x[i]:x[i]+width[i]].fill(color[i])
+
+
+class Game:
 
     def __init__(self):
 
-        self.dt = 1
-        self.pygame = pygame
-        self.pygame.init()
-        self.screen_width = 640
-        self.screen_height = 640
-        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
-        self.gameEntities = pygame.sprite.Group()
-    
+        self.screen_width = 64
+        self.screen_height = 64
+        self._gameEntities = []
+
+    @property
+    def gameEntities(self):
+        return self._gameEntities
+
+    @gameEntities.setter
+    def gameEntities(self, _gameEntities):
+        self._gameEntities = _gameEntities    
+
     @abstractmethod
-    def update(self, action):
+    def step(self, action):
         pass
 
-    def step(self, action):
-        self.screen.fill(BLACK)
-        score, isDone = self.update(action)
-        self.gameEntities.update()
-        self.gameEntities.draw(self.screen)
-        pygame.display.flip()
-        return score, isDone
-       
     def renderPixels(self, buffer):
-        buffer = np.zeros((64,64))
+        _fillwithzero(buffer)
+        #buffer.fill(0)
+        '''
+        count = len(self.gameEntities)
+        x = np.zeros(count,dtype=float)
+        y = np.zeros(count,dtype=float)
+        height = np.zeros(count,dtype=int)
+        width = np.zeros(count,dtype=int)
+        color = np.zeros(count,dtype=int)
 
+        for i in range(count):
+            x[i] = self.gameEntities[i].x
+            y[i] = self.gameEntities[i].y
+            width[i] = self.gameEntities[i].width
+            height[i] = self.gameEntities[i].height
+            color[i] = self.gameEntities[i].color
+        _renderPixels(buffer, x,y,width,height,color)
+        '''
+        
         for gameEntity in self.gameEntities:
-            x = int(gameEntity.rect.x/10)   
-            y = int(gameEntity.rect.y/10)
-            height = int(gameEntity.rect.height/10)
-            width  = int(gameEntity.rect.width/10)
+            
+            x = gameEntity.x
+            y = gameEntity.y
+            height = gameEntity.height
+            width  = gameEntity.width
+            color  = gameEntity.color
+            _setBufferValue(buffer,x,y,width,height,color)
+            '''
+            x = floor(gameEntity.x)
+            y = floor(gameEntity.y)
+            height = ceil(gameEntity.height)
+            width  = ceil(gameEntity.width)
+            color  = gameEntity.color
+            buffer[y:y+height, x:x+width].fill(color)
+            '''
 
-            if height > 0 and width > 0:
-          
-                buffer[y:y+height,x:x+width] = np.ones((height,width))
-
+        
+    
     @abstractmethod
     def legalActions(self):
         pass
 
-    def reset(self):
-        self.gameEntities.empty()
-
-        
-    def createNewEntity(self, _color, _width, _height, _x, _y, game_entity_type=GameEntity):
-        gameEntity = game_entity_type(_color, _width, _height, _x, _y)
-        self.gameEntities.add(gameEntity)
-        return gameEntity
-
-    def setDeltaT(self, dt):
-        self.dt = dt

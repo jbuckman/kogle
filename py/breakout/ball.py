@@ -1,12 +1,12 @@
-from .game_entity import GameEntity
+from ..game_entity import GameEntity
 from random import randint
 
 class Ball(GameEntity):
 
-    def __init__(self, _color, _width, _height, _x, _y):
-        super().__init__(_color, _width, _height, _x, _y)
-        self._vx = randint(30,60)
-        self._vy = 60
+    def __init__(self, _width, _height, _x, _y, _color, _isAlive=True):
+        super().__init__(_width, _height, _x, _y, _color, _isAlive)
+        self._vx = 0.5
+        self._vy = 0.5
 
     @property
     def vx(self):
