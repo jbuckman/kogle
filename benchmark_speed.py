@@ -2,7 +2,7 @@ import random, time, sys
 from kogle.kogle import Kogle
 
 def make_env():
-    return Kogle(game_name=sys.argv[0])
+    return Kogle(game_name=sys.argv[1])
 
 ## Take one step to initialize numba
 env = make_env()
