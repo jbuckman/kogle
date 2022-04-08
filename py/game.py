@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 #from .game_entity import GameEntity
-from .cgame_entity import CGameEntity
-from .cgame_entity_group import CGameEntityGroup
+from py.cgame_entity import CGameEntity
+from py.cgame_entity_group import CGameEntityGroup
 import numpy as np
 
 

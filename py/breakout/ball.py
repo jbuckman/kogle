@@ -1,6 +1,5 @@
-#from ..game_entity import GameEntity
 from random import randint
-from ..cgame_entity import CGameEntity
+from py.cgame_entity import CGameEntity
 class Ball(CGameEntity):
 
     def __init__(self, _width, _height, _x, _y, _color):

@@ -1,8 +1,8 @@
-from ..game import Game
+from py.game import Game
 #from ..game_entity import GameEntity
-from ..cgame_entity import CGameEntity
-from .ball import Ball
-from ..colors import *
+from py.cgame_entity import CGameEntity
+from py.breakout.ball import Ball
+from py.colors import *
 from random import randint
 
 class Breakout(Game):

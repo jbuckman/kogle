@@ -13,7 +13,8 @@ def act(action):
         contine_looping = False
         print(f"Score: {score}")
         pygame.quit()
-  
+        sys.exit()
+
 def get_observation():
     global env
     new_observation = env.observation.repeat(8, 0).repeat(8, 1).T
@@ -59,4 +60,5 @@ while contine_looping:
     screen.blit(surface, (0,0))
     pygame.display.update()
     pygame.display.flip() 
+  
     
