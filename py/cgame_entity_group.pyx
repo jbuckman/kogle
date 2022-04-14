@@ -1,7 +1,7 @@
 cimport cgame_entity
 from cgame_entity cimport CGameEntity
 from libc.stdint cimport uint8_t
-
+import numpy as np
 cdef class CGameEntityGroup:
 
     cdef public list _entities
@@ -33,13 +33,13 @@ cdef class CGameEntityGroup:
         buffer[:] = 0
 
         for gameEntity in self._entities:
-
-            start_y = int(gameEntity._y)
-            end_y   = start_y+gameEntity._height
-            start_x = int(gameEntity._x)
-            end_x   = start_x+gameEntity._width
-            
-            buffer[start_y:end_y,start_x:end_x] = gameEntity._color;
-    
+            if gameEntity._isAlive:
+                start_y = int(gameEntity._y)
+                end_y   = start_y+gameEntity._height
+                start_x = int(gameEntity._x)
+                end_x   = start_x+gameEntity._width
+                
+                buffer[start_y:end_y,start_x:end_x] = gameEntity._color
+                
     def render(self, buffer):
         self._render(buffer)

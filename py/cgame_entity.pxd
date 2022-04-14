@@ -1,3 +1,5 @@
+from libcpp cimport bool
+from libc.stdint cimport uint8_t
 
 cdef class CGameEntity:
 
@@ -5,7 +7,14 @@ cdef class CGameEntity:
     cdef public int _height
     cdef public float _x
     cdef public float _y
-    cdef public int _color
+    cdef public uint8_t _color
     cdef public int _id
 
-    cpdef int collide(self, CGameEntity other)
+    cdef public bool _isAlive
+
+    cdef public float _vx
+    cdef public float _vy
+
+    cpdef void  update(self)
+    cpdef bool  collide(self, CGameEntity other)
+    

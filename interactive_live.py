@@ -31,7 +31,9 @@ contine_looping = True
 action_keys = {}
 action_keys[pygame.K_LEFT] = LEFT
 action_keys[pygame.K_RIGHT] = RIGHT
-
+action_keys[pygame.K_UP] = UP
+action_keys[pygame.K_DOWN] = DOWN
+action_keys[pygame.K_SPACE] = FIRE
 pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((512, 512))
