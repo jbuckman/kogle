@@ -1,14 +1,16 @@
-from libcpp cimport bool
-
+from libc.math cimport fmax, fmin    
+import numpy as np
 cdef class CGameEntity:
 
-    def __init__(self, _width, _height, _x, _y, _color):
+    def __init__(self, _width, _height, _x, _y, _color, _isAlive = True):
         self._width = _width
         self._height = _height
         self._x = _x
         self._y = _y
         self._color = _color
-
+        self._vx = 0
+        self._vy = 0
+        self._isAlive = _isAlive
 
     @property
     def width(self):
@@ -43,12 +45,37 @@ cdef class CGameEntity:
         self._y = value
 
     @property
+    def vx(self):
+        return self._vx
+
+    @vx.setter
+    def vx(self, value):
+        self._vx = value
+
+    @property
+    def vy(self):
+        return self._vy
+
+    @vy.setter
+    def vy(self, value):
+        self._vy = value
+
+    @property
     def color(self):
         return self._color
 
     @color.setter
     def color(self, value):
         self._color = value
+
+    @property
+    def isAlive(self):
+        return self._isAlive
+
+    @isAlive.setter
+    def isAlive(self, value):
+        self._isAlive = value
+
 
     @property
     def id(self):
@@ -63,8 +90,16 @@ cdef class CGameEntity:
     
     def __ne__(self, other):
         return isinstance(other, CGameEntity) and self.id != (<CGameEntity>other).id
+
+    cpdef void update(self):
+        if self._isAlive:
+            self._x = fmax(0, fmin(64 - self._width, self._x+self._vx))
+            self._y = fmax(self._height, fmin(64 - self._height, self._y+self._vy))
     
-    cpdef int collide(self, CGameEntity other):
+    cpdef bool collide(self, CGameEntity other):
+        if not self._isAlive:
+            return False
+
         return(
             self._x < other._x + other._width  and
             self._x + self._width > other._x   and

@@ -1,3 +1,8 @@
+'''
+Use cython counterpart, CGameEntity instead. 
+Kept for benchmarking for purposes only.
+'''
+
 from itertools import count
 
 class GameEntity:

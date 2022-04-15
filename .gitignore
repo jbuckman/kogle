@@ -1,7 +1,9 @@
 .idea/*
-cpp/*.so
-py/*.so
-py/*.cpp
+__pycache__
+*.so
+*.o
+/py/*.cpp
+/py/*/build
 __pycache__/*
 */__pycache__/*
 */*/__pycache__/*

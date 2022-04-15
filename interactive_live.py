@@ -13,7 +13,8 @@ def act(action):
         contine_looping = False
         print(f"Score: {score}")
         pygame.quit()
-  
+        sys.exit()
+
 def get_observation():
     global env
     new_observation = env.observation.repeat(8, 0).repeat(8, 1).T
@@ -30,7 +31,9 @@ contine_looping = True
 action_keys = {}
 action_keys[pygame.K_LEFT] = LEFT
 action_keys[pygame.K_RIGHT] = RIGHT
-
+action_keys[pygame.K_UP] = UP
+action_keys[pygame.K_DOWN] = DOWN
+action_keys[pygame.K_SPACE] = FIRE
 pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((512, 512))
@@ -59,4 +62,5 @@ while contine_looping:
     screen.blit(surface, (0,0))
     pygame.display.update()
     pygame.display.flip() 
+  
     
