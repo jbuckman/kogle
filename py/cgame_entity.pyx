@@ -11,8 +11,6 @@ cdef class CGameEntity:
         self._vx = 0
         self._vy = 0
         self._isAlive = _isAlive
- 
-
 
     @property
     def width(self):
@@ -78,7 +76,7 @@ cdef class CGameEntity:
     def isAlive(self, value):
         self._isAlive = value
 
-  
+
     @property
     def id(self):
         return self._id

@@ -15,6 +15,9 @@ cdef class CGameEntity:
     cdef public float _vx
     cdef public float _vy
 
+    cdef public uint8_t[:,:] _sprite
+    cdef public bool _isSprite
+
     cpdef void  update(self)
     cpdef bool  collide(self, CGameEntity other)
     
