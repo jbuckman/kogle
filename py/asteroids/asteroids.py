@@ -5,7 +5,7 @@ from random import random, randint, uniform
 from py.asteroids.rocks import RockManager
 import numpy as np
 from math import sqrt
-
+g
 MAX_BULLETS = 10
 MAX_BULLET_FRAME_THRESHOLD = 5
 TOTAL_ROTATIONS = 12
