@@ -5,8 +5,7 @@ from random import random, randint, uniform
 from py.asteroids.rocks import RockManager
 import numpy as np
 from math import sqrt
-
-
+g
 MAX_BULLETS = 10
 MAX_BULLET_FRAME_THRESHOLD = 5
 TOTAL_ROTATIONS = 12
@@ -29,16 +28,15 @@ class Asteroids(Game):
 
         self.reset()
     
-
     def reset(self):
 
         self.player = CGameEntity(3, 3, 32, 32, WHITE)
+        self.thruster = 0
 
         self.ufo = CGameEntity(3, 2, 32, 32, BORING_COLORS[3], False)
         self.ufo_bullet = CGameEntity(1, 1, 32, 32, BORING_COLORS[2], False)
 
         self.next_ufo_spawn = randint(60, 100)
-
 
         self.rotation_index = 0
 
@@ -76,8 +74,6 @@ class Asteroids(Game):
         left  = (action == 4)
         right = (action == 5)
 
-        
-
         if fire and self.bullet_index <= MAX_BULLETS and self.bullet_delay == 0:
             
             self.bullets[self.bullet_index].isAlive = True
@@ -92,24 +88,27 @@ class Asteroids(Game):
 
             self.direction = np.dot(self.counter_clockwise ,self.direction)
             self.rotation_index = (self.rotation_index - 1) % TOTAL_ROTATIONS
-            self.updateIndicator()
 
         elif right:
 
             self.direction = np.dot(self.clockwise ,self.direction)
             self.rotation_index = (self.rotation_index + 1) % TOTAL_ROTATIONS
-            self.updateIndicator()
-
+ 
         if forward:
-            self.player.vx = self.direction[0]
-            self.player.vy = self.direction[1]
-            self.player.update()
-            self.updateIndicator()
+            self.thruster =  min(self.thruster+0.5, 3)
+        else:
+            self.thruster =  max(self.thruster-0.25, 0)
+
+        if self.thruster > 0:
+            self.player.vx = self.direction[0]*self.thruster
+            self.player.vy = self.direction[1]*self.thruster
         else:
             self.player.vx = 0
             self.player.vy = 0
+      
 
-
+        self.player.update()
+        self.updateIndicator()   
         self.next_ufo_spawn -= 1
 
         if self.next_ufo_spawn <= 0 and not self.ufo.isAlive:
@@ -171,7 +170,6 @@ class Asteroids(Game):
             self.bullet_delay -= 1
 
         self.rockManager.update()
-
 
         for rock in self.rockManager.activeRocks:
             if rock.collide(self.player):
@@ -285,5 +283,3 @@ class Asteroids(Game):
             self.verticalBar.isAlive = False
             self.dot.x = self.player.x
             self.dot.y = self.player.y
-
-        
