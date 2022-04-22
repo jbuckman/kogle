@@ -1,6 +1,11 @@
 from abc import ABC, abstractmethod
 from py.cgame_entity import CGameEntity
 from py.cgame_entity_group import CGameEntityGroup
+#from .game_entity import GameEntity
+from .cgame_entity import CGameEntity
+from .cgame_entity_group import CGameEntityGroup
+from py.cgame_entity import CGameEntity
+from py.cgame_entity_group import CGameEntityGroup
 import numpy as np
 
 
@@ -18,8 +23,7 @@ class Game:
 
     @gameEntityGroup.setter
     def gameEntities(self, _gameEntities):
-        self._gameEntityGroup = _gameEntityGroup
-
+        self._gameEntityGroup = _gameEntities
 
     def step(self, action):
         pass

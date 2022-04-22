@@ -1,3 +1,8 @@
+
+from py.game import Game
+from py.cgame_entity import CGameEntity
+from py.colors import *
+
 from py.game import Game
 from py.cgame_entity import CGameEntity
 from py.colors import *
