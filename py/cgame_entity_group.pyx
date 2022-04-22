@@ -51,10 +51,5 @@ cdef class CGameEntityGroup:
                 end_y   = start_y+gameEntity._height
                 start_x = int(gameEntity._x)
                 end_x   = start_x+gameEntity._width
-
-                if not gameEntity._isSprite:
-                    buffer[start_y:end_y,start_x:end_x] = gameEntity._color
-                else: 
-                    self.renderSprite(buffer[start_y:end_y,start_x:end_x], gameEntity._sprite)              
-                
+                buffer[start_y:end_y,start_x:end_x] = gameEntity._color
 
