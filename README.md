@@ -12,9 +12,13 @@ chmod u+x i
 ```
 Build instructions to run python/cython implementation of game:
 ```
+<<<<<<< HEAD
 cd py
 python setup.py build_ext --inplace
 cd ..
+=======
+python setup.py build_ext --inplace
+>>>>>>> a3b82f3ae57cc5a7580fde2d130f7ac6f79aba99
 python benchmark_speed.py PyBreakout
 ```
 To use:

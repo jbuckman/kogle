@@ -1,14 +1,16 @@
-from libcpp cimport bool
-
+from libc.math cimport fmax, fmin    
+import numpy as np
 cdef class CGameEntity:
 
-    def __init__(self, _width, _height, _x, _y, _color):
+    def __init__(self, _width, _height, _x, _y, _color, _isAlive = True):
         self._width = _width
         self._height = _height
         self._x = _x
         self._y = _y
         self._color = _color
-
+        self._vx = 0
+        self._vy = 0
+        self._isAlive = _isAlive
 
     @property
     def width(self):

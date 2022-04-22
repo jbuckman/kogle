@@ -34,7 +34,7 @@ class Kogle:
         self.legal_action_mask = self.kogle.legalActions()
         assert len(self.legal_action_mask) == self.action_count
         self.legal_action_list = [action for action in ACTIONS if self.is_legal_action(action)]
-        self.recent_obs_buffer = np.zeros(self.state_shape, dtype=np.uint8)
+        self.recent_obs_buffer = np.ascontiguousarray(np.zeros(self.state_shape), dtype=np.uint8)
         self.kogle.renderPixels(self.recent_obs_buffer[-1])
 
     @property

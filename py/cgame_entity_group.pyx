@@ -1,7 +1,8 @@
 cimport cgame_entity
 from cgame_entity cimport CGameEntity
 from libc.stdint cimport uint8_t
-
+cimport cython
+from cython.view cimport memoryview, array
 cdef class CGameEntityGroup:
 
     cdef public list _entities
@@ -29,17 +30,31 @@ cdef class CGameEntityGroup:
         for entity in entities:
             self._append(entity)
 
-    cdef void _render(self, uint8_t[:,:] buffer):
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
+    def renderSprite(self, uint8_t[:,:] buffer, uint8_t[:,:] sprite):
+        cdef uint8_t* pointer = &buffer[0, 0]
+        cdef uint8_t* spritePointer = &sprite[0, 0]
+        for j in range(buffer.shape[0]):
+            for i in range(buffer.shape[1]):
+                buffer[j * 64 + i] =  sprite[j * 64 + i]
+
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
+    def render(self, uint8_t[:,:] buffer):
         buffer[:] = 0
-
+        
         for gameEntity in self._entities:
+            if gameEntity._isAlive:
+                
+                start_y = int(gameEntity._y)
+                end_y   = start_y+gameEntity._height
+                start_x = int(gameEntity._x)
+                end_x   = start_x+gameEntity._width
 
-            start_y = int(gameEntity._y)
-            end_y   = start_y+gameEntity._height
-            start_x = int(gameEntity._x)
-            end_x   = start_x+gameEntity._width
-            
-            buffer[start_y:end_y,start_x:end_x] = gameEntity._color;
-    
-    def render(self, buffer):
-        self._render(buffer)
+                if not gameEntity._isSprite:
+                    buffer[start_y:end_y,start_x:end_x] = gameEntity._color
+                else: 
+                    self.renderSprite(buffer[start_y:end_y,start_x:end_x], gameEntity._sprite)              
+                
+

@@ -5,7 +5,17 @@ cdef class CGameEntity:
     cdef public int _height
     cdef public float _x
     cdef public float _y
-    cdef public int _color
+    cdef public uint8_t _color
     cdef public int _id
 
-    cpdef int collide(self, CGameEntity other)
+    cdef public bool _isAlive
+
+    cdef public float _vx
+    cdef public float _vy
+
+    cdef public uint8_t[:,:] _sprite
+    cdef public bool _isSprite
+
+    cpdef void  update(self)
+    cpdef bool  collide(self, CGameEntity other)
+    
