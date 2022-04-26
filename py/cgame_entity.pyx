@@ -92,8 +92,8 @@ cdef class CGameEntity:
 
     cpdef void update(self):
         if self._isAlive:
-            self._x = fmax(0, fmin(64 - self._width, self._x+self._vx))
-            self._y = fmax(0, fmin(64 - self._height, self._y+self._vy))
+            self._x = self._x+self._vx
+            self._y = self._y+self._vy
     
     cpdef bool collide(self, CGameEntity other):
         if not self._isAlive:
