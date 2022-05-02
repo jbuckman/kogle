@@ -5,10 +5,11 @@ from random import random, randint, uniform
 from py.asteroids.rocks import RockManager
 import numpy as np
 from math import sqrt
-g
+
 MAX_BULLETS = 10
 MAX_BULLET_FRAME_THRESHOLD = 5
 TOTAL_ROTATIONS = 12
+FRAMES_TILL_NEXT_LEVEL = 300
 
 class Asteroids(Game):
 
@@ -35,8 +36,12 @@ class Asteroids(Game):
 
         self.ufo = CGameEntity(3, 2, 32, 32, BORING_COLORS[3], False)
         self.ufo_bullet = CGameEntity(1, 1, 32, 32, BORING_COLORS[2], False)
+        self.ufo_spawn_rate = [60, 100]
+        self.next_ufo_spawn = randint(*self.ufo_spawn_rate)
+        self.ufo_bullet_probability = 0.8
 
-        self.next_ufo_spawn = randint(60, 100)
+        self.level_counter = 0
+        self.level = 1
 
         self.rotation_index = 0
 
@@ -71,6 +76,7 @@ class Asteroids(Game):
         score = 1
         fire  = (action == 1)
         forward  = (action == 2)
+        back = (action == 3)
         left  = (action == 4)
         right = (action == 5)
 
@@ -95,13 +101,28 @@ class Asteroids(Game):
             self.rotation_index = (self.rotation_index + 1) % TOTAL_ROTATIONS
  
         if forward:
-            self.thruster =  min(self.thruster+0.5, 3)
-        else:
-            self.thruster =  max(self.thruster-0.25, 0)
+            self.thruster =  min(self.thruster+1, 1)
+        elif back:
+            self.thruster =  max(self.thruster-1, -1)
 
-        if self.thruster > 0:
-            self.player.vx = self.direction[0]*self.thruster
-            self.player.vy = self.direction[1]*self.thruster
+        if self.thruster != 0:
+            self.player.vx = self.direction[0]*self.thruster*0.5
+            self.player.vy = self.direction[1]*self.thruster*0.5
+
+            if self.player.y <= 0:
+                self.player.y = self.screen_height - self.player.height
+                self.player.x = self.screen_width - self.player.x 
+            elif self.player.y >= self.screen_height - self.player.height:
+                self.player.y = 1
+                self.player.x = self.screen_width - self.player.x 
+            elif self.player.x <= 0:
+                self.player.y = self.screen_height - self.player.y
+                self.player.x = self.screen_width - self.player.width
+            elif self.player.x >= self.screen_width - self.player.width:
+                self.player.y = self.screen_height - self.player.y
+                self.player.x = 1
+ 
+
         else:
             self.player.vx = 0
             self.player.vy = 0
@@ -124,7 +145,7 @@ class Asteroids(Game):
                 self.ufo.isAlive = False
             else:
 
-                if not self.ufo_bullet.isAlive and random() > 0.8:
+                if not self.ufo_bullet.isAlive and random() > self.ufo_bullet_probability:
                     self.ufo_bullet.isAlive = True
                     self.ufo_bullet.x = self.ufo.x+2
                     self.ufo_bullet.y = self.ufo.y+1
@@ -156,7 +177,8 @@ class Asteroids(Game):
                     self.ufo_bullet.isAlive = False
                     bullet.isAlive = False
                     score += 100
-                    self.next_ufo_spawn = randint(60, 100)
+                    self.level_counter += 100
+                    self.next_ufo_spawn = randint(*self.ufo_spawn_rate)
                 else:
                     for rock in self.rockManager.activeRocks:
                         if bullet.collide(rock):
@@ -180,12 +202,22 @@ class Asteroids(Game):
             rock.y <= rock.height:
 
                 score += 10 * (4-rock.size)
+                self.level_counter += score
                 self.rockManager.kill(rock)
-                
+
+        self.level_counter += 1
+
+        if self.level_counter >= FRAMES_TILL_NEXT_LEVEL * self.level:
+            
+            self.level_counter = 0 
+            self.level += 1
+            self.increaseDifficulty()
+
+
         return (score, False)
 
     def legalActions(self):
-        return (True, True, True, False, True, True)
+        return (True, True, True, True, True, True)
 
     def spawnUFO(self):
         random_num = random()
@@ -212,8 +244,20 @@ class Asteroids(Game):
             self.ufo.x = randint(32, 64-self.ufo.width) 
             self.ufo.y = 64-self.ufo.height-1
             self.ufo.vx = -uniform(0.1, 0.5)
-            self.ufo.vy = -uniform(0.1, 0.5) 
-             
+            self.ufo.vy = -uniform(0.1, 0.5)
+
+    def increaseDifficulty(self):
+
+        if self.rockManager.spawnRate >= 25:
+            self.rockManager.spawnRate = self.rockManager.spawnRate - 3
+
+        if self.ufo_spawn_rate[0] >= 35:
+            self.ufo_spawn_rate[0] -= 5
+            self.ufo_spawn_rate[1] -= 5
+
+        if self.ufo_bullet_probability > 0.2:
+            self.ufo_bullet_probability -= 0.05
+
 
     def updateIndicator(self):
 

@@ -45,16 +45,13 @@ cdef class CGameEntityGroup:
         buffer[:] = 0
         
         for gameEntity in self._entities:
-            if gameEntity._isAlive:
+            if gameEntity._isAlive and \
+            gameEntity._y >= 0 and gameEntity._y <= 64 - gameEntity._height and \
+            gameEntity._x >= 0 and gameEntity._x <= 64 - gameEntity._height:
                 
                 start_y = int(gameEntity._y)
                 end_y   = start_y+gameEntity._height
                 start_x = int(gameEntity._x)
                 end_x   = start_x+gameEntity._width
-
-                if not gameEntity._isSprite:
-                    buffer[start_y:end_y,start_x:end_x] = gameEntity._color
-                else: 
-                    self.renderSprite(buffer[start_y:end_y,start_x:end_x], gameEntity._sprite)              
-                
+                buffer[start_y:end_y,start_x:end_x] = gameEntity._color
 

@@ -31,13 +31,13 @@ class RockManager:
 
     def __init__(self, _spawnRate = 50):
         self._spawnRate = _spawnRate
-        self._frameTillNextSpawn = _spawnRate
+        self._frameTillNextSpawn = 0
         self._rockQueues = []
         self._activeRocks = []
         self._rocks = []
 
         for rockSize in RockSize:
-            rockList = [Rock(rockSize, 33, 33) for _ in range(2**(5-rockSize))] 
+            rockList = [Rock(rockSize, 33, 33) for _ in range(2**(6-rockSize))] 
             rockQueue = deque(rockList)
             self._rockQueues.append(rockQueue)
             self._rocks.extend(rockList)
