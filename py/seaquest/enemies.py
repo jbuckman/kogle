@@ -1,4 +1,3 @@
-from kogle.kogle import LEFT
 from py.cgame_entity import CGameEntity
 from py.colors import *
 from random import random, randint
@@ -123,8 +122,8 @@ class EnemyManager:
     def enemies(self):
         return self._enemies
 
-    def _spawn(self, enemies):
-        
+    def _spawn(self, enemyType):
+        enemies = self.enemy_dict[enemyType]
         amount = min(len(enemies), randint(1,2))
         pos = []
         
@@ -134,16 +133,19 @@ class EnemyManager:
             pos = [randint(7, 30), randint(34, 56)]
 
         for i in range(amount):
+            enemy = enemies.popleft()
             direction = randint(0,1)
             x = 70 if direction == Direction.LEFT else -10
             enemySpeed = 1
-            if self._difficulty == 1:
-                enemySpeed +=  1 if random() > 0.8 else 0
-            elif self._difficulty == 2:
-                enemySpeed +=  1 if random() > 0.7 else 0
-            elif self._difficulty >= 3:
-                enemySpeed +=  1 if random() > 0.5 else 0
-            enemy = enemies.popleft()
+            
+            if enemyType == 'shark':
+                if self._difficulty == 1:
+                    enemySpeed +=  1 if random() > 0.8 else 0
+                elif self._difficulty == 2:
+                    enemySpeed +=  1 if random() > 0.7 else 0
+                elif self._difficulty >= 3:
+                    enemySpeed +=  1 if random() > 0.5 else 0
+                
             enemy.spawn(x, pos[i], enemySpeed, direction)
             self._active_enemies.append(enemy)
             self._enemies_spawned += 1
@@ -169,7 +171,14 @@ class EnemyManager:
             y = enemy.y+(enemy.height)/2
             x = enemy.x if enemy.direction == Direction.LEFT else enemy.x+enemy.width
             self._active_enemies.append(bullet)
-            bullet.spawn(x, y, 2, enemy.direction)
+            speed = 2
+            if self._difficulty == 1:
+                speed +=  1 if random() > 0.8 else 0
+            elif self._difficulty == 2:
+                speed +=  1 if random() > 0.7 else 0
+            elif self._difficulty >= 3:
+                speed +=  1 if random() > 0.5 else 0
+            bullet.spawn(x, y, speed, enemy.direction)
             self._enemies_spawned += 1
 
                 
@@ -180,11 +189,11 @@ class EnemyManager:
         self._frameTillNextSubSpawn -= 1
         
         if self._frameTillNextSharkSpawn <= 0:
-            self._spawn(self.enemy_dict['shark'])
+            self._spawn('shark')
             self._frameTillNextSharkSpawn = randint(*self._frameNextSharkBounds)
         
         if self._frameTillNextSubSpawn  <= 0:
-            self._spawn(self.enemy_dict['submarine'])
+            self._spawn('submarine')
             self._frameTillNextSubSpawn  = randint(*self._frameNextSubBounds)
         
         if self._enemies_spawned > 0:
@@ -199,6 +208,7 @@ class EnemyManager:
                         return GameEvent.LOSE
                     elif enemy.collide(bullet):
                         enemy_despawned = True
+                        bullet.isAlive = False
                         event = GameEvent.ENEMY_SHOT
                     else:  
                         if enemy.enemyType == 'submarine':

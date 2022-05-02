@@ -1,8 +1,6 @@
-from xmlrpc.client import TRANSPORT_ERROR
 from py.game import Game
 from py.cgame_entity import CGameEntity
 from py.colors import *
-from random import random, randint, uniform
 from py.seaquest.divers import DiverManager
 from py.seaquest.enemies import EnemyManager
 from py.seaquest.game_event import GameEvent
@@ -13,6 +11,7 @@ MIN_PLAYER_X = 0
 MAX_PLAYER_X = 60
 MIN_PLAYER_Y = 3
 MAX_PLAYER_Y = 57
+
 class Seaquest(Game):
 
     def __init__(self):
@@ -152,5 +151,3 @@ class Seaquest(Game):
 
     def legalActions(self):
         return (True, True, True, True, True, True)
-
-   
