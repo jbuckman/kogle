@@ -26,7 +26,7 @@ PYBIND11_MODULE(binding, m) {
     })
     .def("step", &SpaceInvaders::step);
 
-
+  /*
   py::class_<Seaquest>(m, "Seaquest")
     .def(py::init<>())
     .def("legalActions", &Seaquest::legalActions)
@@ -35,4 +35,5 @@ PYBIND11_MODULE(binding, m) {
       seaquest.renderPixels((uint8_t *)info.ptr);
     })
     .def("step", &Seaquest::step);
+    */
 }

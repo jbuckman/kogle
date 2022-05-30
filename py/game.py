@@ -21,6 +21,9 @@ class Game:
     def gameEntityGroup(self):
         return self._gameEntityGroup
 
+    def setDefaultBuffer(self, buffer):
+        self._gameEntityGroup.setDefaultBuffer(buffer)
+
     @gameEntityGroup.setter
     def gameEntities(self, _gameEntities):
         self._gameEntityGroup = _gameEntities

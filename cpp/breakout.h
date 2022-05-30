@@ -14,9 +14,8 @@ public:
   void renderPixels(uint8_t * buffer) override {
     memset(buffer, 0, sizeof(uint8_t) * 64 * 64);
 
-    drawRect(buffer, 64.0 * paddle.x - paddleSize * 64.0 / 2.0, 64.0 * paddle.y - ballSize * 64.0 / 2.0, paddleSize * 64.0, ballSize * 64.0, 255);
-    drawRect(buffer, 64.0 * ball.x - ballSize * 64.0 / 2.0, 64.0 * ball.y - ballSize * 64.0 / 2.0, ballSize * 64.0, ballSize * 64.0, 255);
-    drawPixel(buffer, ball.x * 64.0, ball.y * 64.0, 255);
+    paddle.render(buffer);
+    ball.render(buffer);
 
     float y = rowStart;
     int colorIndex = 0;
@@ -40,15 +39,14 @@ public:
     drawNumber(buffer, 1, 1, score);
   }
   std::vector<int> step(uint8_t action) override {
-    bool Up = (action == 2) | (action == 2 + 4);
-    bool Down = (action == 3) | (action == 3 + 4);
-    bool Left = (action == 4) | (action == 4 + 4);
-    bool Right = (action == 5) | (action == 5 + 4);
-    bool Fire = (action == 0) | (action > 5);
-    float lastScore = this->score;
-    ball.x += ball.vx;
-    ball.y += ball.vy;
+    bool Up = (action == 2);
+    bool Down = (action == 3);
+    bool Left = (action == 4);
+    bool Right = (action == 5); 
 
+    float lastScore = this->score;
+    //ball.x += ball.vx;
+    //ball.y += ball.vy;
     // // Auto Player
     // if (abs(paddle.x - ball.x) > paddleSpeed) {
     //   if (paddle.x < ball.x) {
@@ -60,11 +58,11 @@ public:
 
     float humanSpeed = 0;
     if (Right)
-      humanSpeed += paddleSpeed;
+      paddle.setX(paddle.getX()+0.5);
     if (Left)
-      humanSpeed -= paddleSpeed;
-    paddle.x += humanSpeed;
-    if (collide({paddle.x, paddle.y, paddleSize, ballSize}, {ball.x, ball.y, ballSize, ballSize})) {
+      paddle.setX(paddle.getX()-0.5);
+ 
+    if (paddle.collide(ball)) {
       doVolley();
     }
     float y = rowStart;
@@ -73,9 +71,9 @@ public:
        for (int x = 0; x < sizeof(row) / sizeof(row[0]); x++) {
         if (!row[x])
           continue;
-        if (collide({(float) x / 16.0f + 0.5f / 16.0f, y + rowHeight / 2.0f, 1.0 / 16.0f, rowHeight}, {ball.x, ball.y, ballSize, ballSize})) {
+        if (ball.collide((x / 16.0f + 0.5f / 16.0f)*64.0, (y + rowHeight / 2.0f)*64.0f, 1.0 / 16.0f*64.0f, rowHeight*64.0f)) {
           row[x] = 0;
-          ball.vy = -ball.vy;
+          ball.setVy(-ball.getVy());
           score += scores[i];
           goto outer;
         }
@@ -83,20 +81,21 @@ public:
       y += rowHeight;
     }
     outer:;
-    if (ball.y < 0) {
-      ball.y = 0;
-      ball.vy = -ball.vy;
+    if (ball.getY() < 0) {
+      ball.setY(0);
+      ball.setVy(-ball.getVy());
     }
-    if (ball.x > 1) {
-      ball.x = 1;
-      ball.vx = -ball.vx;
+    if (ball.getX() > 63) {
+       ball.setX(63);
+       ball.setVx(-ball.getVx());
     }
-    if (ball.x < 0) {
-      ball.x = 0;
-      ball.vx = -ball.vx;
+    if (ball.getX() < 0) {
+      ball.setX(0);
+      ball.setVx(-ball.getVx());
     }
-    paddle.x = std::max(0.0f, std::min(1.0f, paddle.x));
-    const bool isDone = ball.y > 1;
+    paddle.setX(std::max(0.0f, std::min(63.0f, paddle.getX())));
+    ball.update();
+    const bool isDone = ball.getY() > 63.0;
     const int score = this->score - lastScore;
     if (isDone)
       resetBallAndPaddle();
@@ -104,7 +103,7 @@ public:
   }
 private:
 
-  static constexpr float slowSpeed = 0.35 / 64.0;
+  static constexpr float slowSpeed = 0.35;
   static constexpr float paddleSpeed = 0.5 / 64.0;
   static constexpr float paddleSize = 10.0 / 64.0;
   static constexpr float ballSize = 2.0 / 64.0;
@@ -175,10 +174,10 @@ private:
     {1, 1, 1},
   }};
   void resetBallAndPaddle() {
-    ball.x = 0.5;
-    ball.y = (rowStart + rowHeight * sizeof(rows) / sizeof(rows[0])) * 0.8 + 0.2;
-    ball.vx = rand() % 2 == 0 ? slowSpeed / 2.0 : -slowSpeed / 2.0;
-    ball.vy = slowSpeed;
+    ball.setX(32);
+    ball.setY(((rowStart + rowHeight * sizeof(rows) / sizeof(rows[0])) * 0.8 + 0.2)*64);
+    ball.setVx(rand() % 2 == 0 ? slowSpeed / 2.0 : -slowSpeed / 2.0);
+    ball.setVy(slowSpeed);
     volley = 0;
     score = 0;
     speed = slowSpeed;
@@ -188,43 +187,38 @@ private:
     if (volley % 4 == 0 && speed < slowSpeed * 2.5) {
       speed += slowSpeed / 3.0;
     }
-    const float left = paddle.x - paddleSize / 2.0;
-    int section = floor(8.0 * (ball.x - left) / paddleSize);
+ 
+    int section = floor(ball.getX() - paddle.getX() - 1);
+    
     if (section < 0)
       section = 0;
     if (section > 7)
       section = 7;
-    ball.vy = -speed;
+    
+    ball.setVy(-speed);
     if (section == 0) {
-      ball.vx = -speed * 2.0;
+      ball.setVx(-speed * 2.0);
     } else if (section == 1) {
-      ball.vx = -speed * 1.5;
+      ball.setVx(-speed * 1.5);
     } else if (section == 2) {
-      ball.vx = -speed;
+      ball.setVx(-speed);
     } else if (section == 3) {
-      ball.vx = -speed * 0.5;
+      ball.setVx(-speed*0.5);
     } else if (section == 4) {
-      ball.vx = speed * 0.5;
+      ball.setVx(speed*0.5);
     } else if (section == 5) {
-      ball.vx = speed;
+      ball.setVx(speed);
     } else if (section == 6) {
-      ball.vx = speed * 1.5;
+      ball.setVx(speed*1.5);
     } else if (section == 7) {
-      ball.vx = speed * 2.0;
+      ball.setVx(speed*2);
     }
+
   }
-  struct Paddle {
-    float x;
-    float y;
-  };
-  Paddle paddle = {0.5, 0.9};
-  struct Ball {
-    float x;
-    float y;
-    float vx;
-    float vy;
-  };
-  Ball ball = {0.5, rowHeight, 0.005, 0.005};
+
+  GameEntity paddle{32, 57.6, 10, 2, 255, true};
+  GameEntity ball{32, 32, 2, 2, 255, true};
+
   bool rows[6][16] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -236,6 +230,16 @@ private:
   float speed = 0.005;
   int volley = 0;
   int score = 0;
+
+  void drawPattern(uint8_t * buffer, float x, float y, uint8_t v, const bool pattern[5][3]) {
+    for (int i = 0; i < 5; i++) {
+      for (int j = 0; j < 3; j++) {
+        if(pattern[i][j]) {
+            buffer[i * 64 + j] = v;
+        }
+      }
+    }
+  };
 
   void drawNumber(uint8_t * buffer, float x, float y, int number) {
 

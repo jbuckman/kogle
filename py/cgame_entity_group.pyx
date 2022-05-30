@@ -3,14 +3,28 @@ from cgame_entity cimport CGameEntity
 from libc.stdint cimport uint8_t
 cimport cython
 from cython.view cimport memoryview, array
+import numpy as np
+
 cdef class CGameEntityGroup:
 
     cdef public list _entities
     cdef public int  _count
+    cdef public uint8_t[:,:] _defaultBuffer
 
     def __init__(self):
         self._entities = []
         self._count = 0
+        self.zeroDefaultBuffer()
+
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
+    def setDefaultBuffer(self, uint8_t[:,:] buffer):
+        self._defaultBuffer = buffer
+
+    @cython.boundscheck(False)
+    @cython.wraparound(False)
+    def zeroDefaultBuffer(self):
+        self._defaultBuffer = np.ascontiguousarray(np.zeros((64,64), dtype=np.uint8), dtype=np.uint8)
 
     cdef void _append(self, CGameEntity entity):
         entity._id = self._count
@@ -42,7 +56,7 @@ cdef class CGameEntityGroup:
     @cython.boundscheck(False)
     @cython.wraparound(False)
     def render(self, uint8_t[:,:] buffer):
-        buffer[:] = 0
+        buffer[:] = self._defaultBuffer[:]
         
         for gameEntity in self._entities:
             if gameEntity._isAlive and \

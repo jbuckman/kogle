@@ -2,330 +2,374 @@
 #include "game.h"
 #include <math.h>
 #include <iostream>
-
+#include <vector>
 
 class SpaceInvaders : public Game {
-public:
-  SpaceInvaders() : Game() {
-    reset();
+
+  public:
+
+    class Player : public GameEntity {
+      private:
+        int bitmap[3][7] =  {
+          {0, 0, 1, 1, 1, 0, 0},
+          {1, 1, 1, 1, 1, 1, 1},
+          {1, 1, 1, 1, 1, 1, 1}
+        };
+      public:
+        Player() : GameEntity (32, 60, 7, 3, 255, true){    
+          this->isSprite = true;
+          sprite = (int*)bitmap;
+        }
+    };
+
+    class Enemy : public GameEntity {
+      private:
+        int bitmap[4][5] = {
+          {1, 1, 1, 1, 1},
+          {1, 0, 1, 0, 1},
+          {1, 1, 1, 1, 1},
+          {1, 0, 1, 0, 1}
+        };
+        int row;
+        int col;
+      public:
+        Enemy(int row, int col)
+        : GameEntity (6+4*row+row*3, col*5+6, 5, 4, 255, true){
+          this->row = row;
+          this->col = col;
+          this->isSprite = true;
+          sprite = (int*)bitmap;
+        };
+
+        int getCol(){return col;}
+        int getRow(){return row;}
+        void reset(){
+          setX(6+4*row+row*3);
+          setY(col*5+6);
+          setIsAlive(true);
+        }
+    };
+
+    Player player;
+
+    std::vector<GameEntity> gameEntities;
+    enum Direction { LEFT=0, RIGHT=1 };
+    enum Event {NOTHING, ENEMY_SHOT, GAME_OVER, NEXT_LEVEL};
+    static constexpr int boringColors[] = {75, 100, 150, 200, 225, 250};
+
+    class Bullet : public GameEntity {
+      public:
+        Bullet() : GameEntity(0, 0, 1, 2, 255, false) {};
+    };
+
+    class ShieldBlock : public GameEntity {
+      public:
+        ShieldBlock(float x, float y) : 
+        GameEntity(x, y, 3, 3, boringColors[3], true) {
+          reset();
+        }
+
+        void reset() {
+          health = 3;
+          setColor(boringColors[health]);
+          setIsAlive(true);
+        }
+
+        void hit() {
+          setColor(boringColors[--health]);
+          if(health == 0) {
+            setIsAlive(false);
+          }
+        }
+      private:
+        int health = 3;
+  };
+
+  class ShieldManager {
+    public:
+      ShieldManager() {
+
+        for(int i=0; i<4; i++) {
+          for(int j=0; j<2; j++) {
+            ShieldBlock * block = new ShieldBlock(8+3.0f*j+i*14, 52);
+            shieldBlocks.push_back(block);
+          }
+        }
+      }
+
+      std::vector<ShieldBlock*> getShields() {
+        return shieldBlocks;
+      }
+
+      void reset() {
+        for (ShieldBlock * block : shieldBlocks) {
+          block->reset();
+        }
+      }
+
+      std::vector<ShieldBlock*> shieldBlocks;
+  };
+
+
+  class EnemyManager {
+    private:
+      static const int rowLength = 6;
+      static const int columnLength = 4;
+      int enemyCount;
+      bool enemyMap[rowLength][columnLength];
+      float chanceOfFire = 0.8;
+      Direction direction;
+      const int MAX_BULLETS = 4;
+      int bulletsAmount;
+      int difficulty = 1;
+
+    public:
+      std::vector<Enemy*> enemies;
+      std::vector<Bullet*> bullets;
+      std::vector<Bullet*> activeBullets;
+      std::vector<Bullet*> freeBullets;
+      EnemyManager() {
+        for (int r = 0; r < rowLength; r++) {
+          for (int c = 0; c < columnLength; c++) {
+            Enemy * enemy = new Enemy(r, c);
+            enemies.push_back(enemy);
+            
+          }
+        }
+
+        for(int i=0; i<MAX_BULLETS; i++) {
+          Bullet * bullet = new Bullet();
+          bullets.push_back(bullet);
+        }
+        reset();
+      }
+
+      void reset() {
+
+        direction = RIGHT;
+        enemyCount = rowLength*columnLength;
+        for (Enemy * enemy : enemies) {
+          enemy->reset();
+        }
+        for(int c=0; c<columnLength; c++) {
+          for(int r=0; r<rowLength; r++) {
+            enemyMap[r][c] = true;
+          }        
+        }
+
+        bulletsAmount = std::min(MAX_BULLETS, difficulty);
+
+        for (Bullet * bullet : bullets) {
+          bullet->setIsAlive(false);
+        }
+
+        freeBullets.clear();
+
+        for(int i=0; i<bulletsAmount; i++) {
+          Bullet * bullet = bullets[i];
+          freeBullets.push_back(bullet);
+        }
+
+        activeBullets.clear();
+      }
+
+
+      Event update(GameEntity & playerBullet) {
+        bool descend = false;
+        Event event = NOTHING;
+        if(direction == RIGHT) {
+          for(int r=rowLength-1; r>=0; r--) {
+            for(int c=columnLength-1; c>=0; c--) {
+              updateEnemy(playerBullet, c, r, descend, event);
+
+            }        
+          }
+        } else {
+          for(int r=0; r<rowLength; r++) {
+            for(int c=0; c<columnLength; c++) {
+              updateEnemy(playerBullet, c, r, descend, event);
+
+            }        
+          }
+        }
+      
+        if(!freeBullets.empty() && chanceOfFire < uniform(0,1)) {
+          int row = uniformInteger(0, rowLength);
+          int col = uniformInteger(0, columnLength);
+          if(enemyMap[row][col]) {
+            Enemy * enemy = enemies[col+row*columnLength];
+            Bullet * bullet = freeBullets.back();
+            freeBullets.pop_back();
+            bullet->setX(enemy->getX()+enemy->getWidth()/2);
+            bullet->setY(enemy->getY()+enemy->getHeight());
+            bullet->setIsAlive(true);
+            bullet->setVy(1);
+            bullet->update();
+            activeBullets.push_back(bullet);
+          }
+        }
+       
+        return event;
+      }
+
+      void updateEnemy(GameEntity & playerBullet, int column, int row, bool & descend, Event & event) {
+        Enemy * enemy = enemies[column+row*columnLength];
+        if(enemy->getIsAlive()){
+          enemy->setVy(0);
+          float vx = 0; 
+          float vy = 0;
+          
+          if(playerBullet.getIsAlive() && enemy->collide(playerBullet)) {
+            enemy->setIsAlive(false);
+            playerBullet.setIsAlive(false);
+            enemyMap[row][column] = false;
+            enemyCount--;
+
+            if(enemyCount==0) {
+              event = NEXT_LEVEL;
+            } else {
+              event = ENEMY_SHOT;
+            }
+            
+            return;
+          }
+    
+
+          if(!descend) {
+            if(enemy->getX() >= 60 || enemy->getX() <= 0) {
+              descend = true;
+              direction =(Direction)(((int)direction) ^ 1);
+            } 
+          }
+
+          if(descend) {
+            vx = (direction == LEFT) ? -1 : 1;
+            vy = 1;
+          }
+          vx = (direction == LEFT) ? -1 : 1;
+          enemy->setVx(vx);
+          enemy->setVy(vy);
+          enemy->update();
+
+          if(enemy->getY() >= 50) {
+            event = GAME_OVER;
+          }
+        }
+      }
+
+  };
+
+  Bullet playerBullet;
+  EnemyManager enemyManager = EnemyManager();
+  ShieldManager shieldManager = ShieldManager();
+
+  SpaceInvaders() : Game() {}
+
+  void nextLevel() {
+    std::cout << "hello"; 
+    enemyManager.reset();
   }
+  
   std::vector<bool> legalActions() override {
     //      NOOP, FIRE, UP,   DOWN,   LEFT, RIGHT
     return {true, true, false, false,  true, true};
   }
+
   void renderPixels(uint8_t * buffer) override {
     memset(buffer, 0, sizeof(uint8_t) * 64 * 64);
-
-    drawBitmap(buffer, shipPatternRows, ship.x, ship.y, 255);
-
-    for(ShieldBlock &block: shieldBlocks) {
-      if(block.health > 0) {
-        drawBitmap(buffer, SHIELD_BLOCK_STATES[block.health-1], block.point.x, block.point.y, 255);
-      }  
+    
+    player.render(buffer);
+    playerBullet.render(buffer);
+    for(Enemy * enemy : enemyManager.enemies) {
+      enemy->render(buffer);
+    }
+    
+    for(Bullet * bullet : enemyManager.bullets) {
+      bullet->render(buffer);
     }
 
-    for(int r=0; r < ENEMY_ROWS; r++) {
-      for(int c=0; c < ENEMIES_PER_ROW; c++) {
-        if(enemyGrid[r][c]) {
-          drawBitmap(buffer, ENEMYSPRITE, enemies[r][c].x, enemies[r][c].y, 255);
-        }
-      }
+    for(ShieldBlock * shield : shieldManager.getShields()) {
+      shield->render(buffer);
     }
-
-    for(int i=0; i < maxEnemyBullets; i++) {
-      if(enemyBullets[i].active) {
-        drawRect(buffer, enemyBullets[i].point.x*64.0, enemyBullets[i].point.y*64.0, 64.0*bulletWidth, 64.0*bulletHeight, 255);
-      }
-    }
-
-    if(bulletFired) {
-      drawRect(buffer, bullet.x*64.0, bullet.y*64.0, 64.0*bulletWidth, 64.0*bulletHeight, 255);
-    }
+    
   }
 
   std::vector<int> step(uint8_t action) override {
-
-    int score = 0;
-    bool gameOver = false;
-
-    bool Left = (action == 4) | (action == 4 + 4);
-    bool Right = (action == 5) | (action == 5 + 4);
     bool Fire = (action == 1);
-
-    if (Right) {
-      ship.x += shipSpeed;
-    } else if (Left) {
-      ship.x -= shipSpeed;
-    }
+    bool Up = (action == 2);
+    bool Down = (action == 3);
+    bool Left = (action == 4);
+    bool Right = (action == 5); 
+    int score = 0;
     
-    ship.x = std::max(0.0f, std::min(1.0f, ship.x));
+    if(Left && player.getX() > 0) {
+      player.setVx(-1);
+      player.update();
 
-    for(int c=ENEMIES_PER_ROW-1; c >= 0; c--) {
-      for(int r=ENEMY_ROWS-1; r >= 0; r--) {
-        if(enemyGrid[r][c]) {
-          if(enemies[r][c].x + enemySpeedX >= 1.0  && enemyMoveRight || enemies[r][c].x - enemySpeedX <= 0.0  && !enemyMoveRight) {
-            
-            if(enemies[r][c].y + enemySpeedY >= 0.7) {
-              return {score, true};
-            }
+    } else if(Right && player.getX() < 60) {
+      player.setVx(1);
+      player.update();
 
-            enemyMoveRight = !enemyMoveRight;
-            for(auto & row : enemies) {
-              for(auto & enemy : row) {
-                enemy.y += enemySpeedY;
-              }
-            } 
-          }
-     
-          if(enemyMoveRight)
-            enemies[r][c].x += enemySpeedX;
-          else 
-            enemies[r][c].x -= enemySpeedX; 
-        }
-      }
+    } else if(Fire && !playerBullet.getIsAlive()) {
+      playerBullet.setY(player.getY()-2);
+      playerBullet.setX(player.getX()+player.getWidth()/2);
+      playerBullet.setIsAlive(true);
     }
-
-    if(enemyBulletsActive < maxEnemyBullets && bernoulli(enemyFireProbability)) {
-      
-      for(int r=0; r <ENEMY_ROWS; r++) {
-        std::vector<int> aliveInRow;
-      
-        for(int c=0; c < ENEMIES_PER_ROW; c++) {
-    
-          if(enemyGrid[r][c]) {
-            aliveInRow.push_back(c);
-          }
-        }
-        int aliveCount =  aliveInRow.size();
-        if(aliveCount>0) {
-          int randomIndex = rand() % aliveCount;
-          int c = aliveInRow[randomIndex];
-
-          for(int i=0; i < maxEnemyBullets; i++) {
-            if(!enemyBullets[i].active) {
-              enemyBullets[i] = {{enemies[r][c].x+(ENEMY_WIDTH/4.0f)/64.0f, enemies[r][c].y}, true};
-              enemyBulletsActive++;
-              break;
-            }
-          }
-          break;
-        }
-      }
-    }
-
-    for(int i=0; i < maxEnemyBullets; i++) {
-      if(enemyBullets[i].active) {
-        
-        bool hit = false;
-        
-        for(ShieldBlock & block: shieldBlocks) {
-          if (block.health > 0 && collide({block.point.x, block.point.y, SHIELD_BLOCK_DIM, SHIELD_BLOCK_DIM}, {enemyBullets[i].point.x, enemyBullets[i].point.y, bulletWidth, bulletHeight})) {
-            block.health =  block.health - 1;
-            hit = true;
-            break;
-          }
-        }
-
-        if(!hit && collide({ship.x, ship.y, SHIP_WIDTH/64.0f, SHIP_HEIGHT/64.0f}, {enemyBullets[i].point.x, enemyBullets[i].point.y, bulletWidth, bulletHeight})) {
-          return {score, true};
-        }
-        
-        enemyBullets[i].point.y += enemyBulletSpeed;
-        
-        if(hit || enemyBullets[i].point.y >= 1.0) {
-          enemyBulletsActive--;
-          enemyBullets[i].active = false;
-        }
-      }
-    }
-
-    if (Fire && !bulletFired) {
-      
-      bullet = {ship.x+(SHIP_WIDTH/4.0f)/64.0f, ship.y};
-      bulletFired = true;
-    } 
-
-    if (bulletFired) {
-      bool hit = false;
-      bullet.y -= playerBulletSpeed;
-
-      for(int r=0; r < ENEMY_ROWS; r++) {
-        for(int c=0; c < ENEMIES_PER_ROW; c++) {
-          if(enemyGrid[r][c] && collide({enemies[r][c].x, enemies[r][c].y, 5.0f/64.0f, 5.0f/64.0f}, {bullet.x, bullet.y, bulletWidth, bulletHeight})) {
-            hit = true;
-            score++;
-            enemiesKilled++;
-            enemyGrid[r][c] = false;  
-            break;    
-          }
-        }
-      }
-
-      if(enemiesKilled == TOTAL_ENEMIES) {
-        level++;
-        reset();
-        return {++score, false};
-      }
-      if(!hit) {
-        for(ShieldBlock & block: shieldBlocks) {
-          if (block.health > 0 && collide({block.point.x, block.point.y, SHIELD_BLOCK_DIM, SHIELD_BLOCK_DIM}, {bullet.x, bullet.y, bulletWidth, bulletHeight})) {
-            block.health =  block.health - 1;
-            hit = true;
-            break;
-          }
-        }
-      }
-
-      if(bullet.y < 0.0 || hit) {
  
-        bulletFired = false;
+    Event event = enemyManager.update(playerBullet);
+
+    if(event == GAME_OVER){
+      return {score, true};
+    } else if(event == ENEMY_SHOT){
+      score += 10;
+    } else if(event == NEXT_LEVEL){
+      score += 10;
+      nextLevel();
+      return {score, false};
+    }
+ 
+    for (int i = 0; i < enemyManager.activeBullets.size(); i++) {
+      bool despawn = false;
+      Bullet * enemyBullet = enemyManager.activeBullets[i];
+      for(ShieldBlock * shieldPtr: shieldManager.getShields()) {
+        ShieldBlock shield = *(shieldPtr);
+        if(shieldPtr->getIsAlive() && playerBullet.collide(shield)){
+          shieldPtr->hit();
+          playerBullet.setIsAlive(false);
+        }
+        if(shield.getIsAlive() && enemyBullet->collide(shield)) {
+          shieldPtr->hit();
+          despawn = true;
+        }
       }
-    }    
-    return {score, gameOver};
+
+      if(!despawn && enemyBullet->collide(player)) {
+        return {0, true};
+      }
+
+      if(!despawn && enemyBullet->getY() >= 64) {
+        despawn = true;
+      }
+
+      if(despawn) {
+        enemyBullet->setIsAlive(false);
+        enemyManager.freeBullets.push_back(enemyBullet);
+        enemyManager.activeBullets.erase(enemyManager.activeBullets.begin()+i);
+      } else {
+        enemyBullet->update();
+      }
+    }
+
+    if(playerBullet.getIsAlive()) {
+      playerBullet.setVy(-2);
+      playerBullet.update();
+      
+      if(playerBullet.getY() <= 0) {
+        playerBullet.setIsAlive(false);
+      }
+    }
+
+    return {score, false};
+
   }
-
-private:
-
-  static constexpr float slowSpeed = 0.35 / 64.0;
-  static constexpr float shipSpeed = 0.5 / 64.0;
-
-  static constexpr float rowHeight = 2.0 / 64.0;
-  static constexpr float rowStart = 20.0 / 64.0;
-
-  static constexpr float bulletHeight = 2.0 / 64.0;
-  static constexpr float bulletWidth = 1.0 / 64.0;
-
-  static constexpr float SHIELD_BLOCK_DIM = 3.0 / 64.0;
-
-  static constexpr int ENEMY_ROWS = 4;
-  static constexpr int ENEMIES_PER_ROW = 6;
-  
-  static constexpr int TOTAL_ENEMIES = ENEMY_ROWS * ENEMIES_PER_ROW;
-
-  bool shipPatternRows[3][7] = {
-    {0, 0, 1, 1, 1, 0, 0},
-    {1, 1, 1, 1, 1, 1, 1},
-    {1, 1, 1, 1, 1, 1, 1},  
-  };
-  
-  bool ENEMYSPRITE[4][5] = {
-    {1, 1, 1, 1, 1},
-    {1, 0, 1, 0, 1},
-    {1, 1, 1, 1, 1},
-    {1, 0, 1, 0, 1}
-  };
-
-  int SHIP_HEIGHT =  sizeof(shipPatternRows)/sizeof(shipPatternRows[0]); 
-  int SHIP_WIDTH =  sizeof(shipPatternRows[0])/sizeof(bool); 
-
-  int ENEMY_HEIGHT =  sizeof(ENEMYSPRITE)/sizeof(ENEMYSPRITE[0]); 
-  int ENEMY_WIDTH =  sizeof(ENEMYSPRITE[0])/sizeof(bool); 
-
-  Point ship = {0.5, 0.9};
-
-  bool bulletFired = false;
-
-  float playerBulletSpeed = 0.0025f;
-  float enemyBulletSpeed = 0.0025f;
-
-  Point bullet = {0.5, 1.0};
-  
-  struct EnemyBullet {
-    Point point;
-    bool active;
-  };
-
-  std::vector<EnemyBullet> enemyBullets;
-
-  int maxEnemyBullets = 1;
-  int enemyBulletsActive = 0;
-  
-  float enemySpeedX = 0.001;
-  float enemySpeedY = 0.01;
-  bool  enemyMoveRight = true;
-
-  struct ShieldBlock {
-    Point point;
-    int health;
-  };
-
-  bool SHIELD_BLOCK_STATES[3][3][3] = {
-    {
-      {0, 0, 0},
-      {1, 0, 1},
-      {1, 1, 0}
-    },
-    {
-      {0, 1, 1},
-      {1, 0, 1},
-      {1, 1, 0}
-    },
-    {
-      {1, 1, 1},
-      {1, 1, 1},
-      {1, 1, 1}
-    },
-  };
-
-  ShieldBlock shieldBlocks[8] = {
-    {{0.1f,0.8f},3},
-    {{0.1f+SHIELD_BLOCK_DIM,0.8f},3},
-
-    {{0.35f,0.8f},3},
-    {{0.35f+SHIELD_BLOCK_DIM,0.8f},3},
-
-    {{0.6f,0.8f},3},
-    {{0.6f+SHIELD_BLOCK_DIM,0.8f},3},
-
-    {{0.85f,0.8f},3},
-    {{0.85f+SHIELD_BLOCK_DIM,0.8f},3},
-  };
-
-  bool enemyGrid[ENEMY_ROWS][ENEMIES_PER_ROW];
-
-  int enemiesKilled = 0;
-  int rowCount = ENEMY_ROWS;
-  int colCount = ENEMIES_PER_ROW;
-
-  Point enemies[ENEMY_ROWS][ENEMIES_PER_ROW];
-
-  double enemyFireProbability = 0.01;
-  
-  int level = 0;
-  
-protected:
-
-  void reset() {
-
-
-    bulletFired = false;
-    enemiesKilled = 0;
-    enemyBulletsActive = 0; 
-    
-    enemyBullets.clear();
-    for(int i=0; i<maxEnemyBullets; i++) {
-      enemyBullets.push_back({{0.5, 0.0f}, false});
-    }
-
-    enemyFireProbability = 0.01+(0.04*level);
-    
-    if((level+1)%2==0) {
-      maxEnemyBullets += 1;
-    }
-    else if(level == 0) {
-      maxEnemyBullets = 1;
-    }
-    
-    for(ShieldBlock & block: shieldBlocks) {
-      block.health = 3;
-    }  
-
-    for(int r=0; r < ENEMY_ROWS; r++) {
-      for(int c=0; c < ENEMIES_PER_ROW; c++) {
-        enemyGrid[r][c] = true;
-        enemies[r][c] = {0.05f+0.13f*c, 0.03f+0.1f*r};
-      }
-    }
-
-  };
 };
