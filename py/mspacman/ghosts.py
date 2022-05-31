@@ -1,9 +1,8 @@
 from tkinter import RIGHT
 from py.cgame_entity import CGameEntity
 from py.colors import *
-from py.mspacman.levels import LEVEL_1_16, LEVEL_1_64
+from py.mspacman.levels import level1
 from enum import IntEnum
-from py.mspacman.levels import LEVEL_1_16,LEVEL_1_64
 from abc import ABC, abstractmethod
 import numpy as np
 from math import sqrt, ceil
@@ -23,7 +22,7 @@ class Ghost(CGameEntity, ABC):
 
     def __init__(self, _x, _y, _state, _limit):
         super().__init__(4, 4, _x, _y, BORING_COLORS[4])
-        self._levelLayout = LEVEL_1_64
+        self._levelLayout = level1
         self._lastMove = None
         self._timer = 0
         self._state = GhostState.SCATTER
@@ -35,7 +34,7 @@ class Ghost(CGameEntity, ABC):
         self._frightenedSpeed = 0.5
         self._initialPosition = [_x, _y]
         self._reviveTimer = 0
-        self._reviveDuration = 30
+        self._reviveDuration = 50
         self._limit = _limit
 
 
@@ -156,7 +155,7 @@ class Ghost(CGameEntity, ABC):
 
     def randomMove(self):
         
-        moves = np.ones(4)
+        moves = np.zeros(4)
 
         x1 = int(min(max(self.x, 0), 63))
         y1 = int(min(max(self.y, 0), 63))

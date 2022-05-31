@@ -4,7 +4,7 @@ from py.cgame_entity import CGameEntity
 from py.colors import *
 from py.actions import Action
 import numpy as np
-from py.mspacman.levels import LEVEL_1_16,LEVEL_1_64
+from py.mspacman.levels import level1
 from py.mspacman.pellets import PelletManager
 from py.mspacman.player import Player
 from py.mspacman.ghosts import GhostManager, GhostHouse
@@ -16,17 +16,18 @@ class MsPacman(Game):
         super().__init__()
 
         self.setDefaultBuffer(
-            np.array(LEVEL_1_64*BORING_COLORS[5], dtype=np.uint8)
+            np.array(level1*BORING_COLORS[5], dtype=np.uint8)
         )
 
-        self.levelLayout = LEVEL_1_64
+        self.levelLayout = level1
         self.pelletManager = PelletManager()
         self.player = Player(28, 56)
         self.ghostHouse = GhostHouse(28, 28)
+        self.levelLayout[28:32,28:36] = 1
         self.ghostManager = GhostManager(self.ghostHouse)
         self.isEnergized = False
         self.energizedTimer = 0
-        self.energizedDuration = 30
+        self.energizedDuration = 50
         self.pelletConsumed = 0
         self.pelletAmount = len(self.pelletManager.pellets)
         self.ghostKillStreak = 0 

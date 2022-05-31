@@ -1,6 +1,6 @@
 from py.cgame_entity import CGameEntity
 from py.colors import *
-from py.mspacman.levels import LEVEL_1_16
+from py.mspacman.levels import level1
 import numpy as np
 
 class Pellet(CGameEntity):
@@ -54,19 +54,19 @@ class PelletManager:
         power_pellet_locations = []
         level_layout = None
         if self._level == 1:
-            no_pellet_locations = [(7,7), (8,7), (7,14), (8,14)]
-            power_pellet_locations = [(1, 1),(14,1),(1, 11),(14, 11)]
-            level_layout = LEVEL_1_16
+            no_pellet_locations = [(28,28), (32,28), (28,56), (32,56)]
+            power_pellet_locations = [(4, 4),(56,4),(4, 44),(56, 44)]
+            level_layout = level1
 
         for r, c in zip(*np.where(level_layout == 0)):
 
-            if not (c, r) in no_pellet_locations:
+            if not (c, r) in no_pellet_locations and c%4==0 and r%4==0:
 
                 isPower = True if (c, r) in power_pellet_locations else False 
                 if isPower:
-                    self._powerPellets.append(Pellet(1+c*4, 1+r*4, True))
+                    self._powerPellets.append(Pellet(c+1, r+1, True))
                 else:
-                    self._pellets.append(Pellet(1+c*4, 1+r*4))
+                    self._pellets.append(Pellet(c+1, r+1))
 
 
 
