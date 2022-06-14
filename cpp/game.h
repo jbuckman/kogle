@@ -4,18 +4,10 @@
 #include <random>
 
 class Game {
+  
 
-  public:
-
-    void drawRectDangerously(uint8_t * buffer, float x, float y, float w, float h, uint8_t v) {
-      for (float j = y; j < y + h; j++) {
-        for (float i = x; i < x + w; i++) {
-          int index = floor(j) * 64 + floor(i);
-          buffer[index] = v;
-        }
-      }   
-    };
-
+  public: 
+  
     static bool bernoulli(double probability) {
       std::random_device randomDevice{}; 
       std::mt19937 generator{randomDevice()}; 
@@ -26,14 +18,21 @@ class Game {
     static double uniform(double min, double max) {
       std::random_device randomDevice{}; 
       std::mt19937 generator{randomDevice()}; 
-      std::uniform_real_distribution distribution(min, max);
+      std::uniform_real_distribution <>distribution(min, max);
       return distribution(generator);
     }
 
     static double uniformInteger(int min, int max) {
-      std::random_device randomDevice; 
-      std::mt19937 generator(randomDevice()); 
+      std::random_device randomDevice{}; 
+      std::mt19937 generator{randomDevice()}; 
       std::uniform_int_distribution<> distribution(min, max);
+      return distribution(generator);
+    }
+
+    static int pmf(std::vector<int> p) {
+      std::random_device randomDevice{}; 
+      std::mt19937 generator{randomDevice()}; 
+      std::discrete_distribution<int> distribution(p.begin(), p.end());
       return distribution(generator);
     }
 
@@ -44,6 +43,18 @@ class Game {
     static int diceRoll() {
       return randomBetween(1,6);
     }
+
+    enum Action {NO_ACTION=0, FIRE=1, UP=2, DOWN=3, LEFT=4, RIGHT=5};
+    
+    void drawRectDangerously(uint8_t * buffer, float x, float y, float w, float h, uint8_t v) {
+      for (float j = y; j < y + h; j++) {
+        for (float i = x; i < x + w; i++) {
+          int index = floor(j) * 64 + floor(i);
+          buffer[index] = v;
+        }
+      }   
+    };
+
 
     virtual std::vector<bool> legalActions() = 0;
     virtual void renderPixels(uint8_t * buffer) = 0;
@@ -151,6 +162,11 @@ class Game {
                  
                  (abs((this->getY() + this->getHeight()/2.0) - (y + height/2.0)) * 2 
                  < (this->getHeight() + height));
+        };
+
+        bool collide(GameEntity * other) {
+          
+          return collide(other->getX(), other->getY(), other->getWidth(), other->getHeight());
         };
 
         void update() {
