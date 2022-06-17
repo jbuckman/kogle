@@ -86,10 +86,10 @@ class Pacman : public Game {
       {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
       {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
       {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
-      {1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
-      {1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
-      {1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
-      {1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
+      {1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1},
+      {1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1},
+      {1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1},
+      {1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1},
       {1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1},
       {1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1},
       {1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1},
@@ -118,10 +118,10 @@ class Pacman : public Game {
       {1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
       {1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
       {1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
-      {1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
-      {1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
-      {1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
-      {1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
+      {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
+      {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
+      {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
+      {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
       {1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1},
       {1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1},
       {1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1},
@@ -144,6 +144,90 @@ class Pacman : public Game {
       {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
     };
 
+
+
+    class GhostHouse: public GameEntity {
+      public:
+        GhostHouse(float x, float y) : 
+        GameEntity(x, y, 8, 4, boringColors[4], true) {}
+    };
+
+    class Player : public GameEntity {
+      public:
+        int rightBitmap[4][4] = {
+          {1, 1, 1, 1},
+          {1, 1, 0, 0},
+          {1, 1, 0, 0},
+          {1, 1, 1, 1}
+        };
+        int upBitmap[4][4] = {
+          {1, 0, 0, 1},
+          {1, 0, 0, 1},
+          {1, 1, 1, 1},
+          {1, 1, 1, 1}
+        };
+        int downBitmap[4][4] = {
+          {1, 1, 1, 1},
+          {1, 1, 1, 1},
+          {1, 0, 0, 1},
+          {1, 0, 0, 1}
+        };
+        int leftBitmap[4][4] = {
+          {1, 1, 1, 1},
+          {0, 0, 1, 1},
+          {0, 0, 1, 1},
+          {1, 1, 1, 1}
+        };
+        Action lastAction;
+        Player(float x, float y) : 
+        GameEntity(x, y, 4, 4, boringColors[2], true) {
+          this->lastAction = UP;
+          this->isSprite = true;
+          sprite = (int*)upBitmap;
+        }
+
+        void move(Action action, float movementAmount, uint8_t levelLayout[64][64]) {
+          bool valid = validMove(this, movementAmount, levelLayout, action);
+          if(valid && action == UP) {
+            if(this->getY()<=0) {
+              this->setY(60);
+            } else {
+              this->setVy(-movementAmount);
+            }
+            this->setVx(0);
+            sprite = (int*)upBitmap;
+          } else if(valid && action == LEFT) {
+              if(this->getX()<=0) {
+                this->setX(60);
+              } else {
+                this->setVx(-movementAmount);
+              }
+              this->setVy(0);
+              sprite = (int*)leftBitmap;
+          } else if(valid && action == DOWN) {
+              if(this->getY()>=64-this->getHeight()) {
+                this->setY(0);
+              } else {
+                this->setVy(movementAmount);
+              }
+              this->setVx(0);
+              sprite = (int*)downBitmap;
+          } else if(valid && action == RIGHT) {
+              if(this->getX()>=64-this->getWidth()) {
+                this->setX(0);
+              } else {
+                this->setVx(movementAmount);
+              }
+              this->setVy(0);
+              sprite = (int*)rightBitmap;
+          } else {
+            this->setVx(0);
+            this->setVy(0);
+          }
+          this->lastAction = action;      
+        }
+
+    };
     static bool validMove(GameEntity * gameEntity, float movementAmount, uint8_t level[64][64], Action action) {
 
       if(action == UP){
@@ -227,16 +311,21 @@ class Pacman : public Game {
       public:
         std::vector<Pellet*> powerPellets;
         std::vector<Pellet*> pellets;
-        int level = 1;
         
-        PelletManager(uint8_t levelLayout[64][64]) {
-          level = 1;
-          reset(levelLayout);
+        PelletManager(uint8_t levelLayout[64][64], Player * player, GhostHouse * ghostHouse, int powerPelletLocations[4][2]) {
+          reset(levelLayout, player, ghostHouse, powerPelletLocations);
         }
 
-        void spawnPellets(uint8_t levelLayout[64][64]) {
-          int noPelletLocations[4][2] = {{28,28}, {32,28}, {28,56}, {32,56}};
-          int powerPelletLocations[4][2] = {{4, 4},{56,4},{4, 44},{56, 44}};
+        void spawnPellets(uint8_t levelLayout[64][64], Player * player, GhostHouse * ghostHouse, int powerPelletLocations[4][2]) {
+          int noPelletLocations[5][2] = {
+            {static_cast<int>(player->getX()), static_cast<int>(player->getY())}, 
+            {static_cast<int>(ghostHouse->getX()), static_cast<int>(ghostHouse->getY())},
+            {static_cast<int>(ghostHouse->getX()+4), static_cast<int>(ghostHouse->getY())},
+            {static_cast<int>(ghostHouse->getX()), static_cast<int>(ghostHouse->getY()-4)},  
+            {static_cast<int>(ghostHouse->getX()+4), static_cast<int>(ghostHouse->getY()-4)},  
+          };
+
+
           for (int r=0; r<64; r++) {
             for (int c=0; c<64; c++) {
 
@@ -250,12 +339,13 @@ class Pacman : public Game {
                     isPower = true;
                     break;
                   }
+                }
+                for(int i=0; i<5; i++) {
                   if(c==noPelletLocations[i][0] && r==noPelletLocations[i][1]) {
                     noPellet = true;
                     break;
                   }
                 }
-
                 if(noPellet) {
                   continue;
                 } else  {
@@ -270,90 +360,25 @@ class Pacman : public Game {
               
             }
           }
+          //delete[] noPelletLocations;
+          //delete[] powerPelletLocations;
         }
 
-        void reset(uint8_t levelLayout[64][64]) {
+        void reset(uint8_t levelLayout[64][64], Player * player, GhostHouse * ghostHouse, int powerPelletLocations[4][2]) {
+          if(pellets.size() > 0) {
+            for(Pellet * pellet : pellets) {
+              delete pellet;
+            }
+          }
+          if(powerPellets.size() > 0) {
+            for(Pellet * pellet : powerPellets) {
+              delete pellet;
+            }
+          }
           pellets.clear();
           powerPellets.clear();
-          spawnPellets(levelLayout);
+          spawnPellets(levelLayout, player, ghostHouse, powerPelletLocations);
         }
-    };
-
-    class Player : public GameEntity {
-      public:
-        int rightBitmap[4][4] = {
-          {1, 1, 1, 1},
-          {1, 1, 0, 0},
-          {1, 1, 0, 0},
-          {1, 1, 1, 1}
-        };
-        int upBitmap[4][4] = {
-          {1, 0, 0, 1},
-          {1, 0, 0, 1},
-          {1, 1, 1, 1},
-          {1, 1, 1, 1}
-        };
-        int downBitmap[4][4] = {
-          {1, 1, 1, 1},
-          {1, 1, 1, 1},
-          {1, 0, 0, 1},
-          {1, 0, 0, 1}
-        };
-        int leftBitmap[4][4] = {
-          {1, 1, 1, 1},
-          {0, 0, 1, 1},
-          {0, 0, 1, 1},
-          {1, 1, 1, 1}
-        };
-        Action lastAction;
-        Player(float x, float y) : 
-        GameEntity(x, y, 4, 4, boringColors[2], true) {
-          this->lastAction = UP;
-          this->isSprite = true;
-          sprite = (int*)upBitmap;
-        }
-
-        void move(Action action, float movementAmount, uint8_t levelLayout[64][64]) {
-          bool valid = validMove(this, movementAmount, levelLayout, action);
-          if(valid && action == UP) {
-            if(this->getY()<=0) {
-              this->setY(60);
-            } else {
-              this->setVy(-movementAmount);
-            }
-            this->setVx(0);
-            sprite = (int*)upBitmap;
-          } else if(valid && action == LEFT) {
-              if(this->getX()<=0) {
-                this->setX(60);
-              } else {
-                this->setVx(-movementAmount);
-              }
-              this->setVy(0);
-              sprite = (int*)leftBitmap;
-          } else if(valid && action == DOWN) {
-              if(this->getY()>=64-this->getHeight()) {
-                this->setY(0);
-              } else {
-                this->setVy(movementAmount);
-              }
-              this->setVx(0);
-              sprite = (int*)downBitmap;
-          } else if(valid && action == RIGHT) {
-              if(this->getX()>=64-this->getWidth()) {
-                this->setX(0);
-              } else {
-                this->setVx(movementAmount);
-              }
-              this->setVy(0);
-              sprite = (int*)rightBitmap;
-          } else {
-            this->setVx(0);
-            this->setVy(0);
-          }
-          this->lastAction = action;      
-        }
-
     };
 
     enum GhostState { SCATTER=0, CHASE=1, FRIGHTENED=2, NOT_ACTIVE=3, DEAD=4};
@@ -384,7 +409,7 @@ class Pacman : public Game {
         GhostState lastState;
         int scatterDuration = 50;
         int chaseDuration = 100;
-        float normalSpeed = 0.75;
+        float normalSpeed = 0.7;
         float frightenedSpeed = 0.5;
         float initialX;
         float initialY;
@@ -698,31 +723,34 @@ class Pacman : public Game {
         }
     };
 
-    class GhostHouse: public GameEntity {
-      public:
-        GhostHouse(float x, float y) : 
-        GameEntity(x, y, 8, 4, boringColors[4], true) {}
-    };
-
     class GhostManager {
       public:
-        Blinky * blinky;
-        Pinky * pinky;
-        Inky * inky;
-        Clyde * clyde;
+        Blinky * blinky = nullptr;
+        Pinky * pinky = nullptr;
+        Inky * inky = nullptr;
+        Clyde * clyde = nullptr;
         std::vector<Ghost*> ghosts;
         GhostManager(GhostHouse * ghostHouse) {
           reset(ghostHouse);
-          ghosts = {blinky, pinky, inky, clyde};
         }
 
         void reset(GhostHouse * ghostHouse) {
+
+          if(blinky || pinky || inky || clyde) {
+            ghosts.clear();
+            delete blinky;
+            delete pinky; 
+            delete inky; 
+            delete clyde;
+          }
+
           float x = ghostHouse->getX();
           float y = ghostHouse->getY();
           blinky = new Blinky(x, y-4, SCATTER);
           pinky = new Pinky(x+4, y-4, SCATTER);
           inky = new Inky(x, y, NOT_ACTIVE, 30);
           clyde = new Clyde(x, y, NOT_ACTIVE, 60);
+          ghosts = {blinky, pinky, inky, clyde};
         }
 
       
@@ -749,7 +777,7 @@ class Pacman : public Game {
       bool isEnergized = false;
       int energizedTimer = 0;
       int energizedDuration = 50;
-      int pelletConsumed = 0;
+      int pelletsConsumed = 0;
       int pelletAmount;
       int ghostKillStreak = 0;
       int level = 1;
@@ -758,8 +786,9 @@ class Pacman : public Game {
       Pacman() : Game() {
         initLevel(LEVEL_1);
         player = new Player(28, 56);
-        pelletManager = new PelletManager(levelLayout);
         ghostHouse = new GhostHouse(28, 28);
+        int powerPelletLocations[4][2] = {{4, 4},{56,4},{4, 44},{56, 44}};
+        pelletManager = new PelletManager(levelLayout, player, ghostHouse, powerPelletLocations);
         ghostManager = new GhostManager(ghostHouse);
         pelletAmount = pelletManager->pellets.size();
       }
@@ -779,15 +808,26 @@ class Pacman : public Game {
         energizedTimer = 0;
         isEnergized = false;
         ghostKillStreak = 0;
-        pelletConsumed = 0;
+        pelletsConsumed = 0;
         if(level % 2 == 0) {
+          ghostHouse->setX(24);
+          ghostHouse->setY(28);
+          player->setX(28);
+          player->setY(56);
           initLevel(LEVEL_2);
         } else {
+          ghostHouse->setX(24);
+          ghostHouse->setY(28);
+          player->setX(28);
+          player->setY(56);
           initLevel(LEVEL_1);
         }
         ghostManager->reset(ghostHouse);
-        pelletManager->reset(levelLayout);
+        int powerPelletLocations[4][2] = {{4, 4},{56,4},{4, 44},{56, 44}};
+        pelletManager->reset(levelLayout, player, ghostHouse, powerPelletLocations);
+        pelletAmount = pelletManager->pellets.size();
       }
+
       std::vector<bool> legalActions() override {
         //      NOOP, FIRE, UP,   DOWN,   LEFT, RIGHT
         return {true, false, true, true,  true, true};
@@ -830,12 +870,12 @@ class Pacman : public Game {
           Pellet * pellet = pelletManager->pellets[i];
           if(pellet->getIsAlive() && pellet->collide(*player)) {
             pelletManager->pellets.erase(pelletManager->pellets.begin()+i);
-            pelletConsumed += 1;
+            pelletsConsumed += 1;
             score += 10;
 
-            if(pelletConsumed == pelletAmount) {
-              return {score, false};
+            if(pelletsConsumed == pelletAmount) {
               nextLevel();
+              return {score, false};
             }
           }  
         }
@@ -864,7 +904,7 @@ class Pacman : public Game {
           }  
         }
 
-        GameEvent event = ghostManager->update(player, levelLayout, isEnergized, pelletConsumed);
+        GameEvent event = ghostManager->update(player, levelLayout, isEnergized, pelletsConsumed);
 
         if (event == GHOST_KILLED) {
             score += 200*std::pow(2, ghostKillStreak);
