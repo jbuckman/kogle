@@ -1,3 +1,4 @@
+/*
 #pragma once
 #include "game.h"
 #include <math.h>
@@ -406,3 +407,4 @@ private:
     }
   }
 };
+*/
