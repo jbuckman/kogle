@@ -163,6 +163,7 @@ class Game {
         bool collide(GameEntity * other) {
           if(!other->getIsAlive()) 
             return false;          
+          
           return collide(other->getX(), other->getY(), other->getWidth(), other->getHeight());
         };
 

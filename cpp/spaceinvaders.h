@@ -166,7 +166,6 @@ class SpaceInvaders : public Game {
 
       }
 
-
       Event update(GameEntity & playerBullet) {
         bool descend = false;
         Event event = NOTHING;
@@ -233,14 +232,12 @@ class SpaceInvaders : public Game {
             return;
           }
     
-
           if(!descend) {
             if(enemy->getX() >= 60 || enemy->getX() <= 0) {
               descend = true;
               direction =(Direction)(((int)direction) ^ 1);
             } 
           }
-
           if(descend) {
             vy = 1;
           }
