@@ -40,6 +40,10 @@ class Game {
       return (rand() % max + min);
     }
 
+    static float randomFloat() {
+      return (float)rand() / (float)RAND_MAX;
+    }
+
     static int diceRoll() {
       return randomBetween(1,6);
     }

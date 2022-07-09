@@ -27,15 +27,6 @@ PYBIND11_MODULE(binding, m) {
     })
     .def("step", &SpaceInvaders::step);
 
-  py::class_<Pacman>(m, "Pacman")
-    .def(py::init<>())
-    .def("legalActions", &Pacman::legalActions)
-    .def("renderPixels", [](Pacman& pacman, py::buffer b) -> void {
-      py::buffer_info info = b.request();
-      pacman.renderPixels((uint8_t *)info.ptr);
-    })
-    .def("step", &Pacman::step);
-  /*
   py::class_<Seaquest>(m, "Seaquest")
     .def(py::init<>())
     .def("legalActions", &Seaquest::legalActions)
@@ -44,5 +35,14 @@ PYBIND11_MODULE(binding, m) {
       seaquest.renderPixels((uint8_t *)info.ptr);
     })
     .def("step", &Seaquest::step);
-    */
+
+  py::class_<Pacman>(m, "Pacman")
+    .def(py::init<>())
+    .def("legalActions", &Pacman::legalActions)
+    .def("renderPixels", [](Pacman& pacman, py::buffer b) -> void {
+      py::buffer_info info = b.request();
+      pacman.renderPixels((uint8_t *)info.ptr);
+    })
+    .def("step", &Pacman::step);
+
 }
