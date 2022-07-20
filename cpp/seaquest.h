@@ -522,16 +522,18 @@ class Seaquest : public Game {
           if(diversSpawned > 0) {
             for(Diver * diver : divers) {
               if(diver->getIsAlive()) {
-                if((diver->getVx() == 0.5 && diver->getX() >=63) &&
+                if((diver->getVx() == 0.5 && diver->getX() >=63) ||
                 (diver->getVx() == -0.5 && diver->getX() <= 1)) {
                   diver->setIsAlive(false);
                   diversSpawned --;
                 } else if(player->collide(diver)) {
                   diver->setIsAlive(false);
                   diversSaved[diversSavedCount++]->setIsAlive(true);
-                  if(diversSpawned > 0) {
-                    diversSpawned --;
-                  } else {
+                  diversSpawned --;
+                 
+                    
+                  if(diversSpawned == 0) {
+            
                     frameTillNextSpawn = uniform(frameNextDiverBounds[0], frameNextDiverBounds[1]);
                     break;
                   }
