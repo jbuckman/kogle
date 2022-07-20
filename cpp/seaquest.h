@@ -576,7 +576,7 @@ class Seaquest : public Game {
     EnemyManager * enemyManager = NULL;
     bool upForAir = true;
     int level = 0;
-    int oxygenLevel = 200;
+    int oxygenLevel = 120;
 
     Seaquest() : Game() {
       player = new Player();
@@ -607,13 +607,13 @@ class Seaquest : public Game {
 
     void resetOxygenBar() {
       oxygenBar->setWidth(50);
-      oxygenLevel = 200;
+      oxygenLevel = 120;
     }
 
     void updateOxygenBar() {
 
       oxygenLevel--;
-      if(oxygenLevel % 20 == 0) {
+      if(oxygenLevel % 12 == 0) {
         oxygenBar->setWidth(oxygenBar->getWidth()-5);
       }
 
