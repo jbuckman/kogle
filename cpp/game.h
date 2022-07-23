@@ -40,6 +40,10 @@ class Game {
       return (rand() % max + min);
     }
 
+    static float randomFloat() {
+      return (float)rand() / (float)RAND_MAX;
+    }
+
     static int diceRoll() {
       return randomBetween(1,6);
     }
@@ -144,13 +148,9 @@ class Game {
 
         bool collide(GameEntity& other) {
           
-          if(!isAlive || !other.getIsAlive()) 
+          if(!other.getIsAlive()) 
             return false;
-          return (abs((x + width/2.0) -  (other.getX() + other.getWidth()/2.0)) * 2 
-                 < (width + other.getWidth())) &&
-                 
-                 (abs((y + height/2.0) - (other.getY() + other.getHeight()/2.0)) * 2 
-                 < (height + other.getHeight()));
+          return collide(other.getX(), other.getY(), other.getWidth(), other.getHeight());
         };
 
         bool collide(float x, float y, float width, float height) {
@@ -165,6 +165,8 @@ class Game {
         };
 
         bool collide(GameEntity * other) {
+          if(!other->getIsAlive()) 
+            return false;          
           
           return collide(other->getX(), other->getY(), other->getWidth(), other->getHeight());
         };
