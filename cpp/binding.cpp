@@ -4,6 +4,7 @@
 #include "spaceinvaders.h"
 #include "seaquest.h"
 #include "pacman.h"
+#include "freeway.h"
 
 namespace py = pybind11;
 
@@ -44,5 +45,14 @@ PYBIND11_MODULE(binding, m) {
       pacman.renderPixels((uint8_t *)info.ptr);
     })
     .def("step", &Pacman::step);
+
+  py::class_<Freeway>(m, "Freeway")
+    .def(py::init<>())
+    .def("legalActions", &Freeway::legalActions)
+    .def("renderPixels", [](Freeway& freeway, py::buffer b) -> void {
+      py::buffer_info info = b.request();
+      freeway.renderPixels((uint8_t *)info.ptr);
+    })
+    .def("step", &Freeway::step);
 
 }
