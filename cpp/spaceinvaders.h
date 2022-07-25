@@ -76,9 +76,11 @@ class SpaceInvaders : public Game {
         }
 
         void hit() {
-          setColor(boringColors[--health]);
+          health--;
           if(health == 0) {
             setIsAlive(false);
+          } else {
+            setColor(boringColors[health]);
           }
         }
       private:
@@ -113,116 +115,113 @@ class SpaceInvaders : public Game {
 
   class EnemyManager {
     private:
-      static const int rowLength = 6;
-      static const int columnLength = 4;
       int enemyCount;
-      bool enemyMap[rowLength][columnLength];
       float chanceOfFire = 0.8;
       Direction direction;
       const int MAX_BULLETS = 4;
-      int bulletsAmount;
-      int difficulty = 1;
+      int bulletsAmount = 1;
+      int bulletsFiredPerLevel = 0;
 
     public:
-      std::vector<Enemy*> enemies;
+      static const int rowLength = 6;
+      static const int columnLength = 4;
+      int bulletsUsed = 0;
+      Enemy * enemies[rowLength*columnLength];
       std::vector<Bullet*> bullets;
-      std::vector<Bullet*> activeBullets;
-      std::vector<Bullet*> freeBullets;
       EnemyManager() {
-        for (int r = 0; r < rowLength; r++) {
-          for (int c = 0; c < columnLength; c++) {
-            Enemy * enemy = new Enemy(r, c);
-            enemies.push_back(enemy);
-            
+        
+        for (int c = 0; c < columnLength; c++) {
+          for (int r = 0; r < rowLength; r++) {
+            enemies[rowLength * c + r] = new Enemy(r, c);
           }
         }
 
-        for(int i=0; i<MAX_BULLETS; i++) {
+        Bullet * bullet = new Bullet();
+        bullets.push_back(bullet);
+        reset(0);
+      }
+
+      void reset(int difficulty) {
+      
+        
+        direction = RIGHT;
+        enemyCount = rowLength*columnLength;
+        for (int c = 0; c < columnLength; c++) {
+          for (int r = 0; r < rowLength; r++) {
+            enemies[rowLength * c + r]->reset();
+          }
+        }
+
+        bulletsUsed = 0;
+        bulletsFiredPerLevel = 0;
+        bulletsAmount = std::min(MAX_BULLETS, difficulty+1);
+        if(bulletsAmount > bullets.size()) {
           Bullet * bullet = new Bullet();
           bullets.push_back(bullet);
         }
-        reset();
-      }
-
-      void reset() {
-
-        direction = RIGHT;
-        enemyCount = rowLength*columnLength;
-        for (Enemy * enemy : enemies) {
-          enemy->reset();
-        }
-        for(int c=0; c<columnLength; c++) {
-          for(int r=0; r<rowLength; r++) {
-            enemyMap[r][c] = true;
-          }        
-        }
-
-        bulletsAmount = std::min(MAX_BULLETS, difficulty);
 
         for (Bullet * bullet : bullets) {
           bullet->setIsAlive(false);
         }
 
-        freeBullets.clear();
-
-        for(int i=0; i<bulletsAmount; i++) {
-          Bullet * bullet = bullets[i];
-          freeBullets.push_back(bullet);
-        }
-
-        activeBullets.clear();
       }
-
 
       Event update(GameEntity & playerBullet) {
         bool descend = false;
         Event event = NOTHING;
         if(direction == RIGHT) {
+          
           for(int r=rowLength-1; r>=0; r--) {
             for(int c=columnLength-1; c>=0; c--) {
               updateEnemy(playerBullet, c, r, descend, event);
-
             }        
           }
         } else {
-          for(int r=0; r<rowLength; r++) {
-            for(int c=0; c<columnLength; c++) {
+            for(int r=0; r<rowLength; r++) {
+              for(int c=0; c<columnLength; c++) {
               updateEnemy(playerBullet, c, r, descend, event);
-
             }        
           }
         }
-      
-        if(!freeBullets.empty() && chanceOfFire < uniform(0,1)) {
-          int row = uniformInteger(0, rowLength);
-          int col = uniformInteger(0, columnLength);
-          if(enemyMap[row][col]) {
-            Enemy * enemy = enemies[col+row*columnLength];
-            Bullet * bullet = freeBullets.back();
-            freeBullets.pop_back();
+
+        if(bulletsUsed < bulletsAmount && chanceOfFire < uniform(0,1)) {
+          
+          int max = rowLength*columnLength-1;
+          int randIndex = uniformInteger(0, max);
+          Enemy * enemy  = NULL;
+          
+          do {
+            enemy = enemies[randIndex];
+            randIndex = (randIndex + 1) % max;
+          } while(!enemy->getIsAlive());
+          
+        
+          if(enemy->getIsAlive()) {
+            bulletsUsed++;
+            Bullet * bullet = bullets[bulletsFiredPerLevel % bulletsAmount];
             bullet->setX(enemy->getX()+enemy->getWidth()/2);
             bullet->setY(enemy->getY()+enemy->getHeight());
-            bullet->setIsAlive(true);
             bullet->setVy(1);
+            bullet->setIsAlive(true);
             bullet->update();
-            activeBullets.push_back(bullet);
+            bulletsFiredPerLevel++;
           }
         }
-       
+  
         return event;
       }
 
       void updateEnemy(GameEntity & playerBullet, int column, int row, bool & descend, Event & event) {
-        Enemy * enemy = enemies[column+row*columnLength];
+        Enemy * enemy = enemies[rowLength * column + row];
         if(enemy->getIsAlive()){
           enemy->setVy(0);
           float vx = 0; 
           float vy = 0;
           
           if(playerBullet.getIsAlive() && enemy->collide(playerBullet)) {
+            
             enemy->setIsAlive(false);
             playerBullet.setIsAlive(false);
-            enemyMap[row][column] = false;
             enemyCount--;
 
             if(enemyCount==0) {
@@ -230,20 +229,16 @@ class SpaceInvaders : public Game {
             } else {
               event = ENEMY_SHOT;
             }
-            
             return;
           }
     
-
           if(!descend) {
             if(enemy->getX() >= 60 || enemy->getX() <= 0) {
               descend = true;
               direction =(Direction)(((int)direction) ^ 1);
             } 
           }
-
           if(descend) {
-            vx = (direction == LEFT) ? -1 : 1;
             vy = 1;
           }
           vx = (direction == LEFT) ? -1 : 1;
@@ -259,6 +254,7 @@ class SpaceInvaders : public Game {
 
   };
 
+  int difficulty = 0;
   Bullet playerBullet;
   EnemyManager enemyManager = EnemyManager();
   ShieldManager shieldManager = ShieldManager();
@@ -266,8 +262,9 @@ class SpaceInvaders : public Game {
   SpaceInvaders() : Game() {}
 
   void nextLevel() {
-    std::cout << "hello"; 
-    enemyManager.reset();
+    difficulty++;
+    enemyManager.reset(difficulty);
+    shieldManager.reset();
   }
   
   std::vector<bool> legalActions() override {
@@ -280,10 +277,14 @@ class SpaceInvaders : public Game {
     
     player.render(buffer);
     playerBullet.render(buffer);
-    for(Enemy * enemy : enemyManager.enemies) {
-      enemy->render(buffer);
+
+    for (int c = 0; c < enemyManager.columnLength; c++) {
+      for (int r = 0; r < enemyManager.rowLength; r++) {
+        enemyManager.enemies[enemyManager.rowLength * c + r]->render(buffer);
+      }
     }
-    
+
+
     for(Bullet * bullet : enemyManager.bullets) {
       bullet->render(buffer);
     }
@@ -301,7 +302,6 @@ class SpaceInvaders : public Game {
     bool Left = (action == 4);
     bool Right = (action == 5); 
     int score = 0;
-    
     if(Left && player.getX() > 0) {
       player.setVx(-1);
       player.update();
@@ -315,9 +315,7 @@ class SpaceInvaders : public Game {
       playerBullet.setX(player.getX()+player.getWidth()/2);
       playerBullet.setIsAlive(true);
     }
- 
     Event event = enemyManager.update(playerBullet);
-
     if(event == GAME_OVER){
       return {score, true};
     } else if(event == ENEMY_SHOT){
@@ -327,36 +325,35 @@ class SpaceInvaders : public Game {
       nextLevel();
       return {score, false};
     }
- 
-    for (int i = 0; i < enemyManager.activeBullets.size(); i++) {
+    for (int i = 0; i < enemyManager.bullets.size(); i++) {
       bool despawn = false;
-      Bullet * enemyBullet = enemyManager.activeBullets[i];
-      for(ShieldBlock * shieldPtr: shieldManager.getShields()) {
-        ShieldBlock shield = *(shieldPtr);
-        if(shieldPtr->getIsAlive() && playerBullet.collide(shield)){
-          shieldPtr->hit();
-          playerBullet.setIsAlive(false);
+      Bullet * enemyBullet = enemyManager.bullets[i];
+      if(enemyBullet->getIsAlive()) {
+        for(ShieldBlock * shieldBlock: shieldManager.getShields()) {
+          if(shieldBlock->getIsAlive() && playerBullet.collide(shieldBlock)){
+            shieldBlock->hit();
+            playerBullet.setIsAlive(false);
+          }
+          if(shieldBlock->getIsAlive() && enemyBullet->collide(shieldBlock)) {
+            shieldBlock->hit();
+            despawn = true;
+          }
         }
-        if(shield.getIsAlive() && enemyBullet->collide(shield)) {
-          shieldPtr->hit();
+        if(!despawn && enemyBullet->collide(player)) {
+          return {0, true};
+        }
+
+        if(!despawn && enemyBullet->getY() >= 64) {
           despawn = true;
+          enemyManager.bulletsUsed--;
         }
-      }
 
-      if(!despawn && enemyBullet->collide(player)) {
-        return {0, true};
-      }
-
-      if(!despawn && enemyBullet->getY() >= 64) {
-        despawn = true;
-      }
-
-      if(despawn) {
-        enemyBullet->setIsAlive(false);
-        enemyManager.freeBullets.push_back(enemyBullet);
-        enemyManager.activeBullets.erase(enemyManager.activeBullets.begin()+i);
-      } else {
-        enemyBullet->update();
+        if(despawn) {
+          enemyBullet->setIsAlive(false);
+          enemyManager.bulletsUsed--;
+        } else {
+          enemyBullet->update();
+        }
       }
     }
 
@@ -365,6 +362,7 @@ class SpaceInvaders : public Game {
       playerBullet.update();
       
       if(playerBullet.getY() <= 0) {
+        playerBullet.setVy(0);
         playerBullet.setIsAlive(false);
       }
     }
