@@ -1,7 +1,7 @@
 import sys
 from kogle.kogle import *
 import pygame
-import time
+import numpy as np
 
 def act(action):
     global score
@@ -11,7 +11,7 @@ def act(action):
     score += reward
     if env.terminated: 
         contine_looping = False
-        print(f"Score: {score}")
+        print(f"Score: {score}\n")
         pygame.quit()
         sys.exit()
 
@@ -29,11 +29,11 @@ if len(sys.argv) > 2 and sys.argv[2].isdigit():
 score = 0
 contine_looping = True
 action_keys = {}
-action_keys[pygame.K_LEFT] = LEFT
-action_keys[pygame.K_RIGHT] = RIGHT
-action_keys[pygame.K_UP] = UP
-action_keys[pygame.K_DOWN] = DOWN
-action_keys[pygame.K_SPACE] = FIRE
+action_keys[80] = LEFT
+action_keys[79] = RIGHT
+action_keys[82] = UP
+action_keys[81] = DOWN
+action_keys[44] = FIRE
 pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((512, 512))
@@ -44,23 +44,27 @@ while contine_looping:
     for event in pygame.event.get(): 
         if event.type == pygame.QUIT:
             contine_looping = False
-        elif event.type == pygame.KEYDOWN:
+        else:
             started = True
             keys = pygame.key.get_pressed()
-            for key in action_keys:
-                if event.key == key:
-                    next_action = action_keys[key]
-                    break
+            key_codes = np.where(keys)[0]
             
-        elif event.type == pygame.KEYUP:
-            next_action = NOOP
+            if len(key_codes) == 1:
+                next_action = action_keys[key_codes[0]]
+            elif len(key_codes) == 2:
+                key_codes = key_codes[key_codes != next_action]
+                next_action = action_keys[key_codes[0]]
+            else:
+                next_action = NOOP
+        
 
     act(next_action) 
+    
+    pygame.display.update()
     clock.tick(max_frame_rate)
 
     surface = pygame.surfarray.make_surface(get_observation())
     screen.blit(surface, (0,0))
-    pygame.display.update()
-    pygame.display.flip() 
+    
   
     
