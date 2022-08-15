@@ -5,6 +5,7 @@
 #include "seaquest.h"
 #include "pacman.h"
 #include "freeway.h"
+#include "asteroids.h"
 
 namespace py = pybind11;
 
@@ -54,5 +55,15 @@ PYBIND11_MODULE(binding, m) {
       freeway.renderPixels((uint8_t *)info.ptr);
     })
     .def("step", &Freeway::step);
+
+  py::class_<Asteroids>(m, "Asteroids")
+    .def(py::init<>())
+    .def("legalActions", &Asteroids::legalActions)
+    .def("renderPixels", [](Asteroids& asteroids, py::buffer b) -> void {
+      py::buffer_info info = b.request();
+      asteroids.renderPixels((uint8_t *)info.ptr);
+    })
+    .def("step", &Asteroids::step);
+
 
 }

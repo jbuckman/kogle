@@ -1,6 +1,6 @@
 import random
 import numpy as np
-
+import cpp as cpp_games
 ACTIONS = NOOP, FIRE, UP, DOWN, LEFT, RIGHT = list(range(6))
 
 class Kogle:
@@ -21,12 +21,7 @@ class Kogle:
     def __init__(self, **overrides):
         for k, v in overrides.items(): setattr(self, k, v)
 
-        if self.game_name[:2] == 'Py':
-            import py as py_games
-            self.kogle = getattr(py_games, self.game_name[2:])()
-        else:
-            import cpp as cpp_games
-            self.kogle = getattr(cpp_games, self.game_name)()
+        self.kogle = getattr(cpp_games, self.game_name)()
 
         self.steps = 0
         self.terminated = False

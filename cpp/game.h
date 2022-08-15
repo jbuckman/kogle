@@ -29,6 +29,13 @@ class Game {
       return distribution(generator);
     }
 
+    static float uniformFloat(float min, float max) {
+      std::random_device randomDevice{}; 
+      std::mt19937 generator{randomDevice()}; 
+      std::uniform_real_distribution<> distribution(min, max);
+      return distribution(generator);
+    }
+
     static int pmf(std::vector<int> p) {
       std::random_device randomDevice{}; 
       std::mt19937 generator{randomDevice()}; 
