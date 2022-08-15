@@ -1,1 +1,0 @@
-from py.mspacman import *

@@ -10,11 +10,7 @@ Build instructions:
 chmod u+x i
 ./i
 ```
-Build instructions to run python/cython implementation of game:
-```
-python setup.py build_ext --inplace
-python benchmark_speed.py PyBreakout
-```
+
 To use:
 ```
 from kogle.kogle import Kogle

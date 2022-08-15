@@ -42,9 +42,8 @@ next_action = NOOP
 while contine_looping:   
 
     for event in pygame.event.get(): 
-        if event.type == pygame.QUIT:
-            contine_looping = False
-        else:
+
+        if event.type == pygame.KEYDOWN:
             started = True
             keys = pygame.key.get_pressed()
             key_codes = np.where(keys)[0]
@@ -56,8 +55,16 @@ while contine_looping:
                 next_action = action_keys[key_codes[0]]
             else:
                 next_action = NOOP
-        
+            break
+        else:
+            next_action = NOOP
 
+        if event.type == pygame.QUIT:
+            contine_looping = False
+            pygame.quit
+            exit()
+
+        
     act(next_action) 
     
     pygame.display.update()
